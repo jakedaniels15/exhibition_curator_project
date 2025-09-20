@@ -60,16 +60,41 @@
   position: relative;
 }
 
+.navigation-links {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  justify-self: start;
+}
+
 .back-link {
   color: #d4af37;
   font-weight: 600;
   transition: color 0.2s;
   text-decoration: none;
-  justify-self: start;
 }
 
 .back-link:hover {
   color: #b8941f;
+}
+
+.search-link {
+  color: #3a5f3a;
+  font-weight: 600;
+  transition: all 0.2s;
+  text-decoration: none;
+  background: rgba(212, 175, 55, 0.1);
+  border: 2px solid #d4af37;
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+}
+
+.search-link:hover {
+  background: #d4af37;
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
 }
 
 .collection-header h1 {
@@ -338,11 +363,13 @@
 
 .artworks-grid {
   display: flex;
-  gap: 0;
+  gap: 1rem;
   padding: 1rem 2rem 2rem 2rem;
   min-width: min-content;
   align-items: flex-start;
   width: 100%;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .collection-artwork-card {
@@ -356,12 +383,10 @@
   transition: all 0.4s ease;
   position: relative;
   border: 3px solid #8b4513;
-  flex: 1;
-  min-width: 0;
+  width: 280px;
   height: 420px;
   display: flex;
   flex-direction: column;
-  margin: 0 0.5rem;
 }
 
 .collection-artwork-card:hover {
@@ -502,6 +527,16 @@
     text-align: center;
   }
 
+  .navigation-links {
+    justify-self: center;
+    gap: 0.75rem;
+  }
+
+  .search-link {
+    font-size: 0.85rem;
+    padding: 0.35rem 0.7rem;
+  }
+
   .collection-header h1 {
     order: -1;
     font-size: 2rem;
@@ -522,12 +557,12 @@
   }
 
   .artworks-grid {
-    gap: 2rem;
+    gap: 1.5rem;
     padding: 1rem;
+    justify-content: center;
   }
 
   .collection-artwork-card {
-    flex: 0 0 250px;
     width: 250px;
     height: 350px;
     box-shadow: 
@@ -577,6 +612,15 @@
   .collection-header {
     padding: 1rem;
   }
+
+  .navigation-links {
+    gap: 0.5rem;
+  }
+
+  .search-link {
+    font-size: 0.8rem;
+    padding: 0.3rem 0.6rem;
+  }
   
   .collection-header h1 {
     font-size: 1.8rem;
@@ -615,12 +659,12 @@
   }
 
   .artworks-grid {
-    gap: 1.5rem;
+    gap: 1rem;
     padding: 1rem 0.5rem;
+    justify-content: center;
   }
 
   .collection-artwork-card {
-    flex: 0 0 220px;
     width: 220px;
     height: 320px;
     box-shadow: 

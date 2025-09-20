@@ -221,7 +221,10 @@ function Collection() {
     return (
       <div className="collection-page">
         <div className="collection-header">
-          <Link to="/" className="back-link">← Back to Home</Link>
+          <div className="navigation-links">
+            <Link to="/" className="back-link">← Back to Home</Link>
+            <Link to="/search" className="search-link">🔍 Search</Link>
+          </div>
           <h1>My Collection</h1>
         </div>
         <div className="loading-message">Loading your collection...</div>
@@ -232,7 +235,10 @@ function Collection() {
   return (
     <div className="collection-page">
       <div className="collection-header">
-        <Link to="/" className="back-link">← Back to Home</Link>
+        <div className="navigation-links">
+          <Link to="/" className="back-link">← Back to Home</Link>
+          <Link to="/search" className="search-link">🔍 Search</Link>
+        </div>
         <h1>My Collection</h1>
         {collection.length > 0 && (
           <div className="collection-actions">
