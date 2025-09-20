@@ -56,24 +56,19 @@ function Search() {
     }
   };
 
-  const handleAddToCollection = (artwork) => {
-    alert('Button clicked! Artwork: ' + artwork.title);
-    console.log('handleAddToCollection called with:', artwork);
-    console.log('Current collection items:', collectionItems);
-    console.log('Is in collection:', collectionItems.has(artwork.id));
+  const handleAddToCollection = (e, artwork) => {
+    e.preventDefault();
+    e.stopPropagation();
     
     const isInCollection = collectionItems.has(artwork.id);
     
     if (isInCollection) {
       // Remove from collection
-      console.log('Removing from collection:', artwork.id);
       const result = collectionService.removeFromCollection(artwork.id);
-      console.log('Remove result:', result);
       if (result.success) {
         setCollectionItems(prev => {
           const newSet = new Set(prev);
           newSet.delete(artwork.id);
-          console.log('Updated collection items after remove:', newSet);
           return newSet;
         });
         setCollectionMessage('Removed from collection');
@@ -81,15 +76,9 @@ function Search() {
       }
     } else {
       // Add to collection
-      console.log('Adding to collection:', artwork);
       const result = collectionService.addToCollection(artwork);
-      console.log('Add result:', result);
       if (result.success) {
-        setCollectionItems(prev => {
-          const newSet = new Set(prev).add(artwork.id);
-          console.log('Updated collection items after add:', newSet);
-          return newSet;
-        });
+        setCollectionItems(prev => new Set(prev).add(artwork.id));
         setCollectionMessage('Added to collection!');
         setTimeout(() => setCollectionMessage(''), 3000);
       } else {
@@ -180,7 +169,7 @@ function Search() {
                         View Details
                       </Link>
                       <button
-                        onClick={() => handleAddToCollection(artwork)}
+                        onClick={(e) => handleAddToCollection(e, artwork)}
                         className={`add-to-collection-btn ${collectionItems.has(artwork.id) ? 'in-collection' : ''}`}
                       >
                         {collectionItems.has(artwork.id) ? '✓ In Collection' : 'Add to Collection'}
