@@ -301,8 +301,8 @@
 
 .artwork-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 2rem;
   animation: fadeInUp 1s ease-out;
 }
 
