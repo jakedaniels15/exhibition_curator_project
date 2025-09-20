@@ -1,16 +1,18 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import SearchBar from "../components/SearchBar";
 import { searchAllMuseums } from "../services/museumApi";
 import { collectionService } from "../services/collectionService";
 import "./Search.css";
 
 function Search() {
+  const [searchParams] = useSearchParams();
   const [searchResults, setSearchResults] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
   const [error, setError] = useState(null);
   const [collectionItems, setCollectionItems] = useState(new Set());
+  const [currentSearchTerm, setCurrentSearchTerm] = useState('');
 
   // Load collection on mount
   useEffect(() => {
@@ -31,10 +33,19 @@ function Search() {
     return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
+  // Check for auto search parameter (when returning from artwork detail)
+  useEffect(() => {
+    const autoSearchTerm = searchParams.get('auto');
+    if (autoSearchTerm) {
+      handleSearch(autoSearchTerm);
+    }
+  }, [searchParams]);
+
   const handleSearch = async (searchTerm) => {
     setIsLoading(true);
     setHasSearched(true);
     setError(null);
+    setCurrentSearchTerm(searchTerm);
 
     try {
       console.log("Searching for:", searchTerm);
@@ -90,7 +101,11 @@ function Search() {
         <p>Discover masterpieces from world-renowned museums</p>
       </header>
 
-      <SearchBar onSearch={handleSearch} isLoading={isLoading} />
+      <SearchBar 
+        onSearch={handleSearch} 
+        isLoading={isLoading} 
+        initialValue={currentSearchTerm}
+      />
 
       <div className="search-results">
         {isLoading && (
@@ -150,7 +165,7 @@ function Search() {
 
                     <div className="artwork-actions">
                       <Link
-                        to={`/artwork/${artwork.id}`}
+                        to={`/artwork/${artwork.id}?from=search&q=${encodeURIComponent(currentSearchTerm)}`}
                         className="view-details-btn"
                       >
                         View Details

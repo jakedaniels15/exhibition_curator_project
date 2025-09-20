@@ -1,8 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./SearchBar.css";
 
-function SearchBar({ onSearch, isLoading }) {
-  const [searchTerm, setSearchTerm] = useState("");
+function SearchBar({ onSearch, isLoading, initialValue = "" }) {
+  const [searchTerm, setSearchTerm] = useState(initialValue);
+
+  // Update search term when initialValue changes
+  useEffect(() => {
+    setSearchTerm(initialValue);
+  }, [initialValue]);
 
   const handleSubmit = (e) => {
     e.preventDefault();

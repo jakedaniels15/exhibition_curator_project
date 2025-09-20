@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, Link, useNavigate, useSearchParams } from "react-router-dom";
 import ImageMagnifier from "../components/ImageMagnifier";
 import { getArtworkDetails } from "../services/museumApi";
 import { collectionService } from "../services/collectionService";
@@ -8,6 +8,7 @@ import "./ArtworkDetail.css";
 function ArtworkDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [artwork, setArtwork] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -55,7 +56,17 @@ function ArtworkDetail() {
   };
 
   const handleBackClick = () => {
-    navigate(-1); // Go back to previous page
+    // Check if we came from search with a search term
+    const fromSearch = searchParams.get('from') === 'search';
+    const searchTerm = searchParams.get('q');
+    
+    if (fromSearch && searchTerm) {
+      // Navigate back to search with the search term preserved
+      navigate(`/search?auto=${encodeURIComponent(searchTerm)}`);
+    } else {
+      // Default back behavior
+      navigate(-1);
+    }
   };
 
   if (isLoading) {
