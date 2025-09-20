@@ -1,0 +1,140 @@
+.search-bar {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.search-form {
+  margin-bottom: 1.5rem;
+}
+
+.search-input-container {
+  display: flex;
+  position: relative;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border-radius: 50px;
+  overflow: hidden;
+  background: white;
+}
+
+.search-input {
+  flex: 1;
+  padding: 1rem 1.5rem;
+  border: none;
+  outline: none;
+  font-size: 1.1rem;
+  background: transparent;
+  color: #333;
+}
+
+.search-input::placeholder {
+  color: #999;
+}
+
+.search-input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.search-button {
+  padding: 1rem 1.5rem;
+  border: none;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 60px;
+}
+
+.search-button:hover:not(:disabled) {
+  background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+}
+
+.search-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.loading-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.search-presets {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+.presets-label {
+  color: #666;
+  font-weight: 500;
+  margin-right: 0.5rem;
+}
+
+.preset-button {
+  padding: 0.5rem 1rem;
+  border: 2px solid #e0e6ed;
+  background: white;
+  color: #333;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.preset-button:hover:not(:disabled) {
+  border-color: #667eea;
+  color: #667eea;
+  transform: translateY(-1px);
+}
+
+.preset-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .search-bar {
+    padding: 1rem;
+  }
+  
+  .search-input-container {
+    border-radius: 25px;
+  }
+  
+  .search-input {
+    padding: 0.875rem 1.25rem;
+    font-size: 1rem;
+  }
+  
+  .search-button {
+    padding: 0.875rem 1.25rem;
+    min-width: 50px;
+  }
+  
+  .search-presets {
+    justify-content: flex-start;
+  }
+  
+  .presets-label {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+}
