@@ -49,8 +49,7 @@
 }
 
 .artwork-detail-content {
-  max-width: 1200px;
-  margin: 0 auto;
+  width: 100%;
   padding: 2rem;
   display: grid;
   grid-template-columns: 1fr 1fr;

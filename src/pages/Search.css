@@ -38,8 +38,7 @@
 
 .search-results {
   padding: 2rem;
-  max-width: 1200px;
-  margin: 0 auto;
+  width: 100%;
 }
 
 .loading-message, .no-results, .search-prompt {
@@ -148,6 +147,7 @@
   min-height: 2.6rem;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
