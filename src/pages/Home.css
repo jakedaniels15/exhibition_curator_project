@@ -45,46 +45,196 @@
 }
 
 .museums-section {
-  background: #f8f9fa;
-  padding: 2.5rem;
-  border-radius: 15px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  padding: 3rem;
+  border-radius: 20px;
   margin-top: 2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
 }
 
 .museums-section h2 {
   color: #2c3e50;
-  margin-bottom: 2rem;
-  font-size: 2rem;
+  margin-bottom: 2.5rem;
+  font-size: 2.2rem;
+  font-weight: 700;
+  text-align: center;
+  position: relative;
+}
+
+.museums-section h2::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 4px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-radius: 2px;
 }
 
 .museums-list {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2rem;
   margin-bottom: 2.5rem;
 }
 
 .museum-card {
   background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.museum-card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  transition: transform 0.3s, box-shadow 0.3s;
+  cursor: pointer;
+  border: 2px solid transparent;
+  border-radius: 16px;
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.museum-card-link:nth-child(1) {
+  animation-delay: 0.1s;
+}
+
+.museum-card-link:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.museum-card-link:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+  border-color: #667eea;
+}
+
+.museum-card-link:active {
+  transform: translateY(-4px);
+  border-color: #5a6fd8;
+}
+
+.museum-image {
+  position: relative;
+  height: 200px;
+  overflow: hidden;
+}
+
+.museum-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.museum-card-link:hover .museum-image img {
+  transform: scale(1.05);
+}
+
+.museum-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.7) 0%, rgba(118, 75, 162, 0.7) 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.museum-card-link:hover .museum-overlay {
+  opacity: 1;
+}
+
+.museum-badge {
+  background: rgba(255, 255, 255, 0.95);
+  color: #667eea;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+  transform: translateY(10px);
+  transition: transform 0.3s ease 0.1s;
+}
+
+.museum-card-link:hover .museum-badge {
+  transform: translateY(0);
+}
+
+.museum-content {
   padding: 1.5rem;
-  border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s;
 }
 
-.museum-card:hover {
-  transform: translateY(-3px);
+.museum-content h3 {
+  color: #2c3e50;
+  margin-bottom: 0.8rem;
+  font-size: 1.4rem;
+  font-weight: 600;
 }
 
-.museum-card h3 {
-  color: #34495e;
-  margin-bottom: 0.5rem;
-  font-size: 1.3rem;
-}
-
-.museum-card p {
+.museum-content p {
   color: #7f8c8d;
-  line-height: 1.4;
+  line-height: 1.5;
+  margin-bottom: 1.2rem;
+  font-size: 0.95rem;
+}
+
+.explore-link {
+  color: #667eea;
+  font-weight: 600;
+  font-size: 0.95rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 2px solid #667eea;
+  padding: 8px 16px;
+  border-radius: 20px;
+  background: transparent;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.explore-link::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  transition: left 0.3s ease;
+  z-index: -1;
+}
+
+.museum-card-link:hover .explore-link {
+  color: white;
+  border-color: #667eea;
+  transform: translateX(4px);
+}
+
+.museum-card-link:hover .explore-link::after {
+  left: 0;
 }
 
 .browse-button {
@@ -124,5 +274,22 @@
 
   .museums-list {
     grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .museum-image {
+    height: 160px;
+  }
+
+  .museum-content {
+    padding: 1.2rem;
+  }
+
+  .museum-content h3 {
+    font-size: 1.2rem;
+  }
+
+  .museum-card-link:hover {
+    transform: translateY(-4px);
   }
 }

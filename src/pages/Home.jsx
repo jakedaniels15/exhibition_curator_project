@@ -21,21 +21,53 @@ function Home() {
       <section className="museums-section">
         <h2>Museums You Can Explore</h2>
         <div className="museums-list">
-          <div className="museum-card">
-            <h3>Art Institute of Chicago</h3>
-            <p>
-              Explore masterpieces from one of America's premier art museums
-            </p>
-          </div>
-          <div className="museum-card">
-            <h3>Metropolitan Museum of Art</h3>
-            <p>
-              Discover treasures from New York's iconic cultural institution
-            </p>
-          </div>
+          <Link 
+            to="/search?museum=Art Institute of Chicago" 
+            className="museum-card museum-card-link"
+          >
+            <div className="museum-image">
+              <img 
+                src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=200&fit=crop&crop=building" 
+                alt="Art Institute of Chicago building exterior"
+                onError={(e) => {e.target.src = 'https://via.placeholder.com/400x200/667eea/ffffff?text=Art+Institute+of+Chicago'}}
+              />
+              <div className="museum-overlay">
+                <div className="museum-badge">AIC</div>
+              </div>
+            </div>
+            <div className="museum-content">
+              <h3>Art Institute of Chicago</h3>
+              <p>
+                Explore masterpieces from one of America's premier art museums
+              </p>
+              <span className="explore-link">Explore Collection →</span>
+            </div>
+          </Link>
+          <Link 
+            to="/search?museum=Metropolitan Museum of Art" 
+            className="museum-card museum-card-link"
+          >
+            <div className="museum-image">
+              <img 
+                src="https://images.unsplash.com/photo-1549833284-6a7b46fa1a9b?w=400&h=200&fit=crop&crop=building" 
+                alt="Metropolitan Museum of Art building exterior"
+                onError={(e) => {e.target.src = 'https://via.placeholder.com/400x200/764ba2/ffffff?text=Metropolitan+Museum'}}
+              />
+              <div className="museum-overlay">
+                <div className="museum-badge">MET</div>
+              </div>
+            </div>
+            <div className="museum-content">
+              <h3>Metropolitan Museum of Art</h3>
+              <p>
+                Discover treasures from New York's iconic cultural institution
+              </p>
+              <span className="explore-link">Explore Collection →</span>
+            </div>
+          </Link>
         </div>
         <Link to="/search" className="browse-button">
-          Browse Artworks
+          Browse All Artworks
         </Link>
       </section>
     </div>

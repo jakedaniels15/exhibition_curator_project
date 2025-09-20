@@ -39,11 +39,24 @@ function Search() {
     return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
-  // Check for auto search parameter (when returning from artwork detail)
+  // Check for auto search parameter (when returning from artwork detail) or museum parameter (from home page)
   useEffect(() => {
     const autoSearchTerm = searchParams.get('auto');
+    const museumParam = searchParams.get('museum');
+    
+    console.log('Search params:', { autoSearchTerm, museumParam });
+    
     if (autoSearchTerm) {
       handleSearch(autoSearchTerm);
+    } else if (museumParam) {
+      console.log('Museum parameter detected:', museumParam);
+      // Search for broad terms to get museum collections
+      handleSearch('art');
+      // Set the museum filter to the specified museum
+      setTimeout(() => {
+        console.log('Setting museum filter to:', museumParam);
+        setFilterMuseum(museumParam);
+      }, 100);
     }
   }, [searchParams]);
 
@@ -161,8 +174,14 @@ function Search() {
         <Link to="/" className="back-link">
           ← Back to Home
         </Link>
-        <h1>Browse Artworks</h1>
-        <p>Discover masterpieces from world-renowned museums</p>
+        <div className="header-content">
+          <h1>Browse Artworks</h1>
+          {searchParams.get('museum') ? (
+            <p className="museum-subtitle">Exploring {searchParams.get('museum')}</p>
+          ) : (
+            <p>Discover masterpieces from world-renowned museums</p>
+          )}
+        </div>
       </header>
 
       <SearchBar 
