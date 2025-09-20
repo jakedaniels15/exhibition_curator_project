@@ -396,6 +396,9 @@ function Collection() {
               </div>
             ))}
             
+            {/* Spacer for gap */}
+            <div className="card-spacer"></div>
+            
             {/* Add to Collection Card */}
             <div className="add-card-wrapper">
               <Link to="/search" className="add-to-collection-card">

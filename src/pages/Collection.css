@@ -520,8 +520,14 @@
 }
 
 /* Add to Collection Card */
+.card-spacer {
+  width: 20px;
+  height: 420px;
+  flex-shrink: 0;
+}
+
 .add-card-wrapper {
-  margin-left: 5px;
+  padding-left: 20px;
 }
 
 .add-to-collection-card {
@@ -658,7 +664,7 @@
   }
 
   .add-card-wrapper {
-    margin-left: 5px;
+    padding-left: 20px;
   }
 
   .collection-artwork-card {
@@ -791,7 +797,7 @@
   }
 
   .add-card-wrapper {
-    margin-left: 5px;
+    padding-left: 20px;
   }
 
   .collection-artwork-card {
