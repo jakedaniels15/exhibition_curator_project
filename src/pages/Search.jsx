@@ -19,6 +19,7 @@ function Search() {
   const [sortBy, setSortBy] = useState('relevance');
   const [filterMuseum, setFilterMuseum] = useState('all');
   const [filterHasImage, setFilterHasImage] = useState('all');
+  const [filterArtType, setFilterArtType] = useState('all');
 
   // Infinite scroll states
   const [isLoadingMore, setIsLoadingMore] = useState(false);
@@ -70,6 +71,72 @@ function Search() {
       filtered = filtered.filter(artwork => artwork.museum === filterMuseum);
     }
 
+    // Apply art type filter
+    if (filterArtType !== 'all') {
+      filtered = filtered.filter(artwork => {
+        const artType = artwork.artworkType || artwork.medium || '';
+        const department = artwork.department || '';
+        const combinedText = `${artType} ${department}`.toLowerCase();
+        
+        // Check if the selected filter matches the artwork
+        switch (filterArtType) {
+          case 'Painting':
+            return combinedText.includes('painting') || combinedText.includes('oil') || 
+                   combinedText.includes('acrylic') || combinedText.includes('watercolor') || 
+                   combinedText.includes('tempera');
+          case 'Sculpture':
+            return combinedText.includes('sculpture') || combinedText.includes('bronze') || 
+                   combinedText.includes('marble') || combinedText.includes('stone') || 
+                   combinedText.includes('carving');
+          case 'Drawing':
+            return combinedText.includes('drawing') || combinedText.includes('sketch') || 
+                   combinedText.includes('charcoal') || combinedText.includes('pastel') || 
+                   combinedText.includes('graphite');
+          case 'Print':
+            return combinedText.includes('print') || combinedText.includes('etching') || 
+                   combinedText.includes('lithograph') || combinedText.includes('engraving') || 
+                   combinedText.includes('woodcut');
+          case 'Photography':
+            return combinedText.includes('photograph') || combinedText.includes('daguerreotype') || 
+                   combinedText.includes('gelatin silver');
+          case 'Ceramics':
+            return combinedText.includes('ceramic') || combinedText.includes('pottery') || 
+                   combinedText.includes('porcelain') || combinedText.includes('earthenware');
+          case 'Textiles':
+            return combinedText.includes('textile') || combinedText.includes('fabric') || 
+                   combinedText.includes('tapestry') || combinedText.includes('embroidery');
+          case 'Glass':
+            return combinedText.includes('glass') || combinedText.includes('crystal');
+          case 'Furniture':
+            return combinedText.includes('furniture') || combinedText.includes('chair') || 
+                   combinedText.includes('table') || combinedText.includes('cabinet');
+          case 'Jewelry':
+            return combinedText.includes('jewelry') || combinedText.includes('ring') || 
+                   combinedText.includes('necklace') || combinedText.includes('bracelet');
+          case 'Metalwork':
+            return combinedText.includes('metal') && !combinedText.includes('bronze');
+          case 'Manuscript':
+            return combinedText.includes('manuscript') || combinedText.includes('illuminated') || 
+                   combinedText.includes('book') || combinedText.includes('folio');
+          case 'Ancient Art':
+            return combinedText.includes('vessel') || combinedText.includes('amphora') || 
+                   combinedText.includes('vase') || combinedText.includes('ancient');
+          case 'Contemporary Art':
+            return combinedText.includes('installation') || combinedText.includes('conceptual') || 
+                   combinedText.includes('performance');
+          case 'Mixed Media':
+            return combinedText.includes('collage') || combinedText.includes('assemblage') || 
+                   combinedText.includes('mixed media');
+          case 'Design':
+            return combinedText.includes('architectural') || combinedText.includes('design');
+          default:
+            // For other types, check if the filter matches the original art type
+            return artType.toLowerCase().includes(filterArtType.toLowerCase()) ||
+                   filterArtType.toLowerCase().includes(artType.toLowerCase());
+        }
+      });
+    }
+
     // Apply image filter
     if (filterHasImage === 'with-image') {
       filtered = filtered.filter(artwork => artwork.thumbnailUrl || artwork.imageUrl);
@@ -114,10 +181,66 @@ function Search() {
     }
 
     setFilteredResults(filtered);
-  }, [searchResults, sortBy, filterMuseum, filterHasImage]);
+  }, [searchResults, sortBy, filterMuseum, filterHasImage, filterArtType]);
 
   // Get unique museums from current results for filter dropdown
   const availableMuseums = [...new Set(searchResults.map(artwork => artwork.museum).filter(Boolean))];
+
+  // Get unique art types from current results for filter dropdown
+  const availableArtTypes = [...new Set(
+    searchResults.map(artwork => {
+      const artType = artwork.artworkType || artwork.medium || '';
+      const department = artwork.department || '';
+      
+      // Clean up and standardize common art types
+      const cleanType = artType.toLowerCase().trim();
+      const cleanDept = department.toLowerCase().trim();
+      
+      // Paintings
+      if (cleanType.includes('painting') || cleanType.includes('oil') || cleanType.includes('acrylic') || cleanType.includes('watercolor') || cleanType.includes('tempera')) return 'Painting';
+      
+      // Sculptures
+      if (cleanType.includes('sculpture') || cleanType.includes('bronze') || cleanType.includes('marble') || cleanType.includes('stone') || cleanType.includes('carving')) return 'Sculpture';
+      
+      // Works on Paper
+      if (cleanType.includes('drawing') || cleanType.includes('sketch') || cleanType.includes('charcoal') || cleanType.includes('pastel') || cleanType.includes('graphite')) return 'Drawing';
+      if (cleanType.includes('print') || cleanType.includes('etching') || cleanType.includes('lithograph') || cleanType.includes('engraving') || cleanType.includes('woodcut')) return 'Print';
+      
+      // Photography
+      if (cleanType.includes('photograph') || cleanType.includes('daguerreotype') || cleanType.includes('gelatin silver')) return 'Photography';
+      
+      // Decorative Arts
+      if (cleanType.includes('ceramic') || cleanType.includes('pottery') || cleanType.includes('porcelain') || cleanType.includes('earthenware')) return 'Ceramics';
+      if (cleanType.includes('textile') || cleanType.includes('fabric') || cleanType.includes('tapestry') || cleanType.includes('embroidery')) return 'Textiles';
+      if (cleanType.includes('furniture') || cleanType.includes('chair') || cleanType.includes('table') || cleanType.includes('cabinet')) return 'Furniture';
+      if (cleanType.includes('jewelry') || cleanType.includes('ring') || cleanType.includes('necklace') || cleanType.includes('bracelet')) return 'Jewelry';
+      if (cleanType.includes('glass') || cleanType.includes('crystal') || cleanType.includes('vessel')) return 'Glass';
+      if (cleanType.includes('metal') && !cleanType.includes('bronze')) return 'Metalwork';
+      
+      // Manuscripts and Books
+      if (cleanType.includes('manuscript') || cleanType.includes('illuminated') || cleanType.includes('book') || cleanType.includes('folio')) return 'Manuscript';
+      
+      // Ancient and Archaeological
+      if (cleanType.includes('vessel') || cleanType.includes('amphora') || cleanType.includes('vase') || cleanDept.includes('ancient')) return 'Ancient Art';
+      
+      // Contemporary and Modern
+      if (cleanType.includes('installation') || cleanType.includes('conceptual') || cleanType.includes('performance')) return 'Contemporary Art';
+      if (cleanType.includes('collage') || cleanType.includes('assemblage') || cleanType.includes('mixed media')) return 'Mixed Media';
+      
+      // Architecture and Design
+      if (cleanType.includes('architectural') || cleanType.includes('design') || cleanDept.includes('design')) return 'Design';
+      
+      // Catch-all for specific types
+      if (artType && artType.trim() && artType.length > 2) {
+        // Capitalize first letter of each word
+        return artType.split(' ').map(word => 
+          word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+        ).join(' ');
+      }
+      
+      return null;
+    }).filter(Boolean)
+  )].sort();
 
   const handleSearch = async (searchTerm) => {
     setIsLoading(true);
@@ -331,6 +454,21 @@ function Search() {
                     <option value="all">All Museums</option>
                     {availableMuseums.map(museum => (
                       <option key={museum} value={museum}>{museum}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="filter-group">
+                  <label htmlFor="arttype-filter">Art Type:</label>
+                  <select 
+                    id="arttype-filter"
+                    value={filterArtType} 
+                    onChange={(e) => setFilterArtType(e.target.value)}
+                    className="filter-select"
+                  >
+                    <option value="all">All Types</option>
+                    {availableArtTypes.map(artType => (
+                      <option key={artType} value={artType}>{artType}</option>
                     ))}
                   </select>
                 </div>
