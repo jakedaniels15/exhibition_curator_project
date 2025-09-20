@@ -13,6 +13,19 @@ function ArtworkDetail() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isInCollection, setIsInCollection] = useState(false);
+  
+  // Collection navigation state
+  const fromCollection = searchParams.get('from') === 'collection';
+  const currentCollectionIndex = parseInt(searchParams.get('collectionIndex') || '0');
+  const [collectionArtworks, setCollectionArtworks] = useState([]);
+
+  useEffect(() => {
+    // Load collection if viewing from collection
+    if (fromCollection) {
+      const collection = collectionService.getCollection();
+      setCollectionArtworks(collection);
+    }
+  }, [fromCollection]);
 
   useEffect(() => {
     const fetchArtworkDetails = async () => {
@@ -60,12 +73,33 @@ function ArtworkDetail() {
     const fromSearch = searchParams.get('from') === 'search';
     const searchTerm = searchParams.get('q');
     
-    if (fromSearch && searchTerm) {
+    if (fromCollection) {
+      // Navigate back to collection
+      navigate('/collection');
+    } else if (fromSearch && searchTerm) {
       // Navigate back to search with the search term preserved
       navigate(`/search?auto=${encodeURIComponent(searchTerm)}`);
     } else {
       // Default back behavior
       navigate(-1);
+    }
+  };
+
+  const handlePreviousArtwork = () => {
+    if (!fromCollection || currentCollectionIndex <= 0) return;
+    
+    const previousArtwork = collectionArtworks[currentCollectionIndex - 1];
+    if (previousArtwork) {
+      navigate(`/artwork/${previousArtwork.id}?from=collection&collectionIndex=${currentCollectionIndex - 1}`);
+    }
+  };
+
+  const handleNextArtwork = () => {
+    if (!fromCollection || currentCollectionIndex >= collectionArtworks.length - 1) return;
+    
+    const nextArtwork = collectionArtworks[currentCollectionIndex + 1];
+    if (nextArtwork) {
+      navigate(`/artwork/${nextArtwork.id}?from=collection&collectionIndex=${currentCollectionIndex + 1}`);
     }
   };
 
@@ -124,6 +158,29 @@ function ArtworkDetail() {
           ) : (
             <div className="no-image-placeholder">
               <span>No image available</span>
+            </div>
+          )}
+          
+          {/* Collection Navigation */}
+          {fromCollection && collectionArtworks.length > 1 && (
+            <div className="collection-navigation">
+              <button
+                onClick={handlePreviousArtwork}
+                disabled={currentCollectionIndex <= 0}
+                className="nav-button prev-button"
+              >
+                ← Previous
+              </button>
+              <span className="collection-position">
+                {currentCollectionIndex + 1} of {collectionArtworks.length}
+              </span>
+              <button
+                onClick={handleNextArtwork}
+                disabled={currentCollectionIndex >= collectionArtworks.length - 1}
+                className="nav-button next-button"
+              >
+                Next →
+              </button>
             </div>
           )}
         </div>

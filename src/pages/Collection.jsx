@@ -268,21 +268,12 @@ function Collection() {
                     {artwork.artist && (
                       <p className="artwork-artist">{artwork.artist}</p>
                     )}
-                    {artwork.date && (
-                      <p className="artwork-date">{artwork.date}</p>
-                    )}
-                    {artwork.museum && (
-                      <p className="artwork-museum">{artwork.museum}</p>
-                    )}
-                    <p className="added-date">
-                      Added {new Date(artwork.addedAt).toLocaleDateString()}
-                    </p>
                   </div>
                 </div>
 
                 <div className="card-actions">
                   <Link 
-                    to={`/artwork/${artwork.id}`} 
+                    to={`/artwork/${artwork.id}?from=collection&collectionIndex=${filteredCollection.findIndex(item => item.id === artwork.id)}`} 
                     className="view-details-btn"
                   >
                     View Details
