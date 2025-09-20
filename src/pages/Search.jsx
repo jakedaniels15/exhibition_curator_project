@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import SearchBar from "../components/SearchBar";
-import { searchAllMuseums, searchMuseumCollection } from "../services/museumApi";
+import { searchAllMuseums, searchInfiniteMuseumCollection } from "../services/museumApi";
 import { collectionService } from "../services/collectionService";
 import "./Search.css";
 
@@ -19,6 +19,12 @@ function Search() {
   const [sortBy, setSortBy] = useState('relevance');
   const [filterMuseum, setFilterMuseum] = useState('all');
   const [filterHasImage, setFilterHasImage] = useState('all');
+
+  // Infinite scroll states
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
+  const [hasMoreResults, setHasMoreResults] = useState(true);
+  const [searchTermIndex, setSearchTermIndex] = useState(0);
+  const [isMuseumMode, setIsMuseumMode] = useState(false);
 
   // Load collection on mount
   useEffect(() => {
@@ -118,6 +124,8 @@ function Search() {
     setHasSearched(true);
     setError(null);
     setCurrentSearchTerm(searchTerm);
+    setIsMuseumMode(false); // Reset museum mode for regular searches
+    setHasMoreResults(false);
 
     try {
       console.log("Searching for:", searchTerm);
@@ -143,13 +151,18 @@ function Search() {
     setHasSearched(true);
     setError(null);
     setCurrentSearchTerm(`${museumName} Collection`);
+    setIsMuseumMode(true);
+    setSearchTermIndex(0);
+    setHasMoreResults(true);
 
     try {
-      console.log("Searching museum collection for:", museumName);
+      console.log("Searching infinite museum collection for:", museumName);
 
-      // Use the broader museum collection search
-      const results = await searchMuseumCollection(30);
-      setSearchResults(results);
+      // Use the infinite search function
+      const result = await searchInfiniteMuseumCollection(0, 50);
+      setSearchResults(result.artworks);
+      setSearchTermIndex(result.nextSearchIndex);
+      setHasMoreResults(result.hasMore);
 
       // Set the museum filter to the specified museum
       setTimeout(() => {
@@ -157,7 +170,7 @@ function Search() {
         setFilterMuseum(museumName);
       }, 100);
 
-      if (results.length === 0) {
+      if (result.artworks.length === 0) {
         setError("No artworks found for this museum.");
       }
     } catch (error) {
@@ -168,6 +181,49 @@ function Search() {
       setIsLoading(false);
     }
   };
+
+  // Load more results for infinite scroll
+  const loadMoreResults = async () => {
+    if (isLoadingMore || !hasMoreResults || !isMuseumMode) return;
+
+    setIsLoadingMore(true);
+
+    try {
+      const result = await searchInfiniteMuseumCollection(searchTermIndex, 50);
+      
+      // Append new results to existing ones
+      setSearchResults(prev => {
+        const newResults = [...prev, ...result.artworks];
+        // Remove duplicates
+        const uniqueResults = newResults.filter((artwork, index, self) => 
+          index === self.findIndex(a => a.id === artwork.id)
+        );
+        return uniqueResults;
+      });
+      
+      setSearchTermIndex(result.nextSearchIndex);
+      setHasMoreResults(result.hasMore);
+    } catch (error) {
+      console.error("Load more failed:", error);
+    } finally {
+      setIsLoadingMore(false);
+    }
+  };
+
+  // Infinite scroll effect
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.innerHeight + document.documentElement.scrollTop 
+          >= document.documentElement.offsetHeight - 1000) {
+        loadMoreResults();
+      }
+    };
+
+    if (isMuseumMode) {
+      window.addEventListener('scroll', handleScroll);
+      return () => window.removeEventListener('scroll', handleScroll);
+    }
+  }, [isMuseumMode, isLoadingMore, hasMoreResults, searchTermIndex]);
 
   const handleAddToCollection = (e, artwork) => {
     e.preventDefault();
@@ -343,6 +399,21 @@ function Search() {
                 </div>
               ))}
             </div>
+            
+            {/* Infinite scroll loading indicator */}
+            {isMuseumMode && isLoadingMore && (
+              <div className="loading-more">
+                <div className="spinner"></div>
+                <p>Loading more artworks...</p>
+              </div>
+            )}
+            
+            {isMuseumMode && !hasMoreResults && searchResults.length > 0 && (
+              <div className="end-of-results">
+                <p>✨ You've explored the entire collection! ✨</p>
+                <p>Found {filteredResults.length} amazing artworks total.</p>
+              </div>
+            )}
           </div>
         )}
 

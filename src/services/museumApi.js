@@ -33,14 +33,17 @@ export const searchAllMuseums = async (query, limitPerMuseum = 10) => {
   }
 };
 
-// Search for a broader collection from all museums using multiple terms
-export const searchMuseumCollection = async (limitPerMuseum = 20) => {
+// Search for a broader collection from all museums using multiple terms with pagination support
+export const searchMuseumCollection = async (limitPerMuseum = 20, page = 1) => {
   try {
     // Use multiple broad search terms to get a diverse collection
     const searchTerms = ['painting', 'sculpture', 'drawing', 'print', 'photograph', 'ceramic', 'textile', 'modern', 'contemporary', 'ancient'];
     
+    // Calculate items per term based on page and limit
+    const itemsPerTerm = Math.ceil(limitPerMuseum / searchTerms.length);
+    
     const searchPromises = searchTerms.map(term => 
-      searchAllMuseums(term, Math.ceil(limitPerMuseum / searchTerms.length))
+      searchAllMuseums(term, itemsPerTerm)
     );
 
     const results = await Promise.allSettled(searchPromises);
@@ -58,10 +61,45 @@ export const searchMuseumCollection = async (limitPerMuseum = 20) => {
       index === self.findIndex(a => a.id === artwork.id)
     );
 
-    // Shuffle and limit results
-    return shuffleArray(uniqueResults).slice(0, limitPerMuseum * 2);
+    // Shuffle results for variety
+    const shuffled = shuffleArray(uniqueResults);
+    
+    // Implement pagination
+    const startIndex = (page - 1) * limitPerMuseum;
+    const endIndex = startIndex + limitPerMuseum;
+    
+    return {
+      artworks: shuffled.slice(startIndex, endIndex),
+      hasMore: shuffled.length > endIndex,
+      totalResults: shuffled.length
+    };
   } catch (error) {
     console.error("Error in museum collection search:", error);
+    throw error;
+  }
+};
+
+// Infinite scroll version that fetches large batches
+export const searchInfiniteMuseumCollection = async (searchTermIndex = 0, limit = 50) => {
+  try {
+    const searchTerms = [
+      'painting', 'sculpture', 'drawing', 'print', 'photograph', 
+      'ceramic', 'textile', 'modern', 'contemporary', 'ancient',
+      'portrait', 'landscape', 'abstract', 'figurative', 'decorative',
+      'bronze', 'marble', 'oil', 'watercolor', 'etching'
+    ];
+    
+    // Use different search terms for each batch to get more variety
+    const currentTerm = searchTerms[searchTermIndex % searchTerms.length];
+    const results = await searchAllMuseums(currentTerm, limit);
+    
+    return {
+      artworks: results,
+      nextSearchIndex: searchTermIndex + 1,
+      hasMore: searchTermIndex < searchTerms.length - 1 || results.length === limit
+    };
+  } catch (error) {
+    console.error("Error in infinite museum collection search:", error);
     throw error;
   }
 };
