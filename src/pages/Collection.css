@@ -369,7 +369,7 @@
   align-items: flex-start;
   width: 100%;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: space-around;
 }
 
 .collection-artwork-card {
@@ -520,16 +520,6 @@
 }
 
 /* Add to Collection Card */
-.card-spacer {
-  width: 20px;
-  height: 420px;
-  flex-shrink: 0;
-}
-
-.add-card-wrapper {
-  padding-left: 20px;
-}
-
 .add-to-collection-card {
   background: rgba(245, 245, 240, 0.95);
   border-radius: 10px;
@@ -660,11 +650,7 @@
   .artworks-grid {
     gap: 1.5rem;
     padding: 1rem;
-    justify-content: center;
-  }
-
-  .add-card-wrapper {
-    padding-left: 20px;
+    justify-content: space-around;
   }
 
   .collection-artwork-card {
@@ -791,13 +777,10 @@
   }
 
   .artworks-grid {
+  .artworks-grid {
     gap: 1rem;
     padding: 1rem 0.5rem;
-    justify-content: center;
-  }
-
-  .add-card-wrapper {
-    padding-left: 20px;
+    justify-content: space-around;
   }
 
   .collection-artwork-card {

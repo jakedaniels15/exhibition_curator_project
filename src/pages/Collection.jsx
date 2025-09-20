@@ -396,12 +396,8 @@ function Collection() {
               </div>
             ))}
             
-            {/* Spacer for gap */}
-            <div className="card-spacer"></div>
-            
             {/* Add to Collection Card */}
-            <div className="add-card-wrapper">
-              <Link to="/search" className="add-to-collection-card">
+            <Link to="/search" className="add-to-collection-card">
                 <div className="add-icon-container">
                   <div className="plus-icon">+</div>
                 </div>
@@ -410,7 +406,6 @@ function Collection() {
                   <p className="add-card-subtitle">Discover new artworks</p>
                 </div>
               </Link>
-            </div>
           </div>
         </div>
         </>
