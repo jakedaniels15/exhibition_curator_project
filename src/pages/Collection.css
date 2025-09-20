@@ -255,10 +255,11 @@
 
 .artworks-grid {
   display: flex;
-  gap: 2.5rem;
+  gap: 1.5rem;
   padding: 1rem 2rem 2rem 2rem;
   min-width: min-content;
   align-items: flex-start;
+  width: 100%;
 }
 
 .collection-artwork-card {
@@ -272,9 +273,9 @@
   transition: all 0.4s ease;
   position: relative;
   border: 3px solid #8b4513;
-  flex: 0 0 280px;
-  width: 280px;
-  height: 360px;
+  flex: 1;
+  min-width: 0;
+  height: 420px;
   display: flex;
   flex-direction: column;
 }
@@ -354,13 +355,13 @@
   color: #d4af37;
   font-size: 0.65rem;
   font-weight: 600;
-  margin-bottom: 0.2rem;
+  margin-bottom: 0.3rem;
   font-style: italic;
   height: auto;
-  min-height: 0.8rem;
+  min-height: 1rem;
   overflow: visible;
   word-wrap: break-word;
-  line-height: 1.2;
+  line-height: 1.4;
 }
 
 .card-actions {
