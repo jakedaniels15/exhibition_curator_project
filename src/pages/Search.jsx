@@ -180,11 +180,22 @@ function Search() {
         break;
     }
 
+    console.log('Filtered results:', filtered.length, 'out of', searchResults.length);
+    console.log('Filter settings:', { filterMuseum, filterHasImage, filterArtType });
+
     setFilteredResults(filtered);
   }, [searchResults, sortBy, filterMuseum, filterHasImage, filterArtType]);
 
   // Get unique museums from current results for filter dropdown
   const availableMuseums = [...new Set(searchResults.map(artwork => artwork.museum).filter(Boolean))];
+  
+  // Always include the three main museums in dropdown even if no current results
+  const allMuseums = [...new Set([
+    ...availableMuseums,
+    'Art Institute of Chicago',
+    'Metropolitan Museum of Art', 
+    'Smithsonian Institution'
+  ])].sort();
 
   // Get unique art types from current results for filter dropdown
   const availableArtTypes = [...new Set(
@@ -255,6 +266,12 @@ function Search() {
 
       // Use real museum APIs
       const results = await searchAllMuseums(searchTerm, 10);
+      console.log('All search results:', results);
+      console.log('Results by museum:', results.reduce((acc, artwork) => {
+        acc[artwork.museum] = (acc[artwork.museum] || 0) + 1;
+        return acc;
+      }, {}));
+      
       setSearchResults(results);
 
       if (results.length === 0) {
@@ -457,7 +474,7 @@ function Search() {
                     className="filter-select"
                   >
                     <option value="all">All Museums</option>
-                    {availableMuseums.map(museum => (
+                    {allMuseums.map(museum => (
                       <option key={museum} value={museum}>{museum}</option>
                     ))}
                   </select>

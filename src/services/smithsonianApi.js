@@ -8,7 +8,7 @@ export const searchArtworksSmithsonian = async (query, limit = 20) => {
     const response = await fetch(
       `${SMITHSONIAN_BASE_URL}/search?q=${encodeURIComponent(
         query
-      )}&start=0&rows=${limit}&api_key=DEMO_KEY&fqs=online_media_type:"Images"`
+      )}&start=0&rows=${limit}&api_key=DEMO_KEY`
     );
 
     if (!response.ok) {
@@ -69,7 +69,11 @@ export const searchArtworksSmithsonian = async (query, limit = 20) => {
       console.log('Sample result has thumbnail:', !!results[0].thumbnailUrl);
     }
     
-    return results;
+    // Filter for items with images
+    const resultsWithImages = results.filter(artwork => artwork.imageUrl || artwork.thumbnailUrl);
+    console.log('Smithsonian API results with images:', resultsWithImages.length, 'items');
+    
+    return resultsWithImages;
   } catch (error) {
     console.error("Error fetching from Smithsonian API:", error);
     return []; // Return empty array instead of throwing
