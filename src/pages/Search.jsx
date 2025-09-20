@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import SearchBar from "../components/SearchBar";
 import { searchAllMuseums } from "../services/museumApi";
+import { collectionService } from "../services/collectionService";
 import "./Search.css";
 
 function Search() {
@@ -9,6 +10,27 @@ function Search() {
   const [isLoading, setIsLoading] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
   const [error, setError] = useState(null);
+  const [collectionItems, setCollectionItems] = useState(new Set());
+  const [collectionMessage, setCollectionMessage] = useState('');
+
+  // Load collection on mount
+  useEffect(() => {
+    const loadCollection = () => {
+      const collection = collectionService.getCollection();
+      const collectionIds = new Set(collection.map(item => item.id));
+      setCollectionItems(collectionIds);
+    };
+
+    loadCollection();
+    
+    // Listen for storage changes (if collection changes in another tab)
+    const handleStorageChange = () => {
+      loadCollection();
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, []);
 
   const handleSearch = async (searchTerm) => {
     setIsLoading(true);
@@ -35,9 +57,32 @@ function Search() {
   };
 
   const handleAddToCollection = (artwork) => {
-    // TODO: Implement add to collection functionality
-    console.log("Adding to collection:", artwork.title);
-    alert(`"${artwork.title}" will be added to your collection!`);
+    const isInCollection = collectionItems.has(artwork.id);
+    
+    if (isInCollection) {
+      // Remove from collection
+      const result = collectionService.removeFromCollection(artwork.id);
+      if (result.success) {
+        setCollectionItems(prev => {
+          const newSet = new Set(prev);
+          newSet.delete(artwork.id);
+          return newSet;
+        });
+        setCollectionMessage('Removed from collection');
+        setTimeout(() => setCollectionMessage(''), 3000);
+      }
+    } else {
+      // Add to collection
+      const result = collectionService.addToCollection(artwork);
+      if (result.success) {
+        setCollectionItems(prev => new Set(prev).add(artwork.id));
+        setCollectionMessage('Added to collection!');
+        setTimeout(() => setCollectionMessage(''), 3000);
+      } else {
+        setCollectionMessage(result.message);
+        setTimeout(() => setCollectionMessage(''), 3000);
+      }
+    }
   };
 
   return (
@@ -48,6 +93,11 @@ function Search() {
         </Link>
         <h1>Browse Artworks</h1>
         <p>Discover masterpieces from world-renowned museums</p>
+        {collectionMessage && (
+          <div className="collection-message">
+            {collectionMessage}
+          </div>
+        )}
       </header>
 
       <SearchBar onSearch={handleSearch} isLoading={isLoading} />
@@ -117,9 +167,9 @@ function Search() {
                       </Link>
                       <button
                         onClick={() => handleAddToCollection(artwork)}
-                        className="add-to-collection-btn"
+                        className={`add-to-collection-btn ${collectionItems.has(artwork.id) ? 'in-collection' : ''}`}
                       >
-                        Add to Collection
+                        {collectionItems.has(artwork.id) ? '✓ In Collection' : 'Add to Collection'}
                       </button>
                     </div>
                   </div>
