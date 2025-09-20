@@ -3,6 +3,8 @@ const SMITHSONIAN_BASE_URL = "https://api.si.edu/openaccess/api/v1.0";
 
 export const searchArtworksSmithsonian = async (query, limit = 20) => {
   try {
+    console.log('Smithsonian API: Searching for:', query);
+    
     const response = await fetch(
       `${SMITHSONIAN_BASE_URL}/search?q=${encodeURIComponent(
         query
@@ -10,45 +12,69 @@ export const searchArtworksSmithsonian = async (query, limit = 20) => {
     );
 
     if (!response.ok) {
-      throw new Error(`Smithsonian API error: ${response.status}`);
+      console.error(`Smithsonian API error: ${response.status}`);
+      return []; // Return empty array instead of throwing
     }
 
     const data = await response.json();
+    console.log('Smithsonian API raw response:', data);
 
-    if (!data.response || !data.response.docs) {
+    // Handle both possible response structures
+    const items = data.response?.rows || data.response?.docs || [];
+    
+    if (items.length === 0) {
+      console.log('No results found in Smithsonian API');
       return [];
     }
 
     // Transform the data to our standardized format
-    return data.response.docs.map((artwork) => ({
-      id: `smithsonian-${artwork.id}`,
-      title: artwork.title || "Untitled",
-      artist: artwork.content?.indexedStructured?.name?.[0] || 
-              artwork.content?.freetext?.name?.[0]?.content || 
-              "Unknown Artist",
-      date: artwork.content?.indexedStructured?.date?.[0] || 
-            artwork.content?.freetext?.date?.[0]?.content || 
-            "Date unknown",
-      medium: artwork.content?.indexedStructured?.medium?.[0] || 
-              artwork.content?.freetext?.physicalDescription?.[0]?.content || 
-              "Medium unknown",
-      museum: artwork.unitCode ? getMuseumName(artwork.unitCode) : "Smithsonian Institution",
-      museumCode: "SMITHSONIAN",
-      imageUrl: artwork.content?.descriptiveNonRepeating?.online_media?.media?.[0]?.content || null,
-      thumbnailUrl: artwork.content?.descriptiveNonRepeating?.online_media?.media?.[0]?.thumbnail || null,
-      department: artwork.content?.indexedStructured?.topic?.[0] || null,
-      artworkType: artwork.content?.indexedStructured?.object_type?.[0] || 
-                   artwork.content?.indexedStructured?.type?.[0] || null,
-      placeOfOrigin: artwork.content?.indexedStructured?.place?.[0] || 
-                     artwork.content?.indexedStructured?.culture?.[0] || null,
-      gallery: null,
-      museumUrl: artwork.content?.descriptiveNonRepeating?.record_link || 
-                 `https://collections.si.edu/search/detail/edanmdm:${artwork.id}`,
-      originalData: artwork,
-    })).filter(artwork => artwork.imageUrl); // Only return artworks with images
+    const results = items.map((artwork) => {
+      try {
+        return {
+          id: `smithsonian-${artwork.id || artwork.url || Date.now()}`,
+          title: artwork.title || "Untitled",
+          artist: artwork.content?.indexedStructured?.name?.[0] || 
+                  artwork.content?.freetext?.name?.[0]?.content || 
+                  "Unknown Artist",
+          date: artwork.content?.indexedStructured?.date?.[0] || 
+                artwork.content?.freetext?.date?.[0]?.content || 
+                "Date unknown",
+          medium: artwork.content?.indexedStructured?.medium?.[0] || 
+                  artwork.content?.freetext?.physicalDescription?.[0]?.content || 
+                  "Medium unknown",
+          museum: artwork.unitCode ? getMuseumName(artwork.unitCode) : "Smithsonian Institution",
+          museumCode: "SMITHSONIAN",
+          imageUrl: artwork.content?.descriptiveNonRepeating?.online_media?.media?.[0]?.content || 
+                    artwork.content?.descriptiveNonRepeating?.online_media?.media?.[0]?.idsId || 
+                    null,
+          thumbnailUrl: artwork.content?.descriptiveNonRepeating?.online_media?.media?.[0]?.thumbnail || 
+                        artwork.content?.descriptiveNonRepeating?.online_media?.media?.[0]?.content || 
+                        null,
+          department: artwork.content?.indexedStructured?.topic?.[0] || null,
+          artworkType: artwork.content?.indexedStructured?.object_type?.[0] || 
+                       artwork.content?.indexedStructured?.type?.[0] || null,
+          placeOfOrigin: artwork.content?.indexedStructured?.place?.[0] || 
+                         artwork.content?.indexedStructured?.culture?.[0] || null,
+          gallery: null,
+          museumUrl: artwork.content?.descriptiveNonRepeating?.record_link || 
+                     `https://collections.si.edu/search/detail/edanmdm:${artwork.id}`,
+          originalData: artwork,
+        };
+      } catch (itemError) {
+        console.warn('Error processing Smithsonian item:', itemError, artwork);
+        return null;
+      }
+    }).filter(item => item !== null); // Remove any failed items
+    
+    console.log('Smithsonian API processed results:', results.length, 'items');
+    if (results.length > 0) {
+      console.log('Sample result:', results[0]);
+    }
+    
+    return results;
   } catch (error) {
     console.error("Error fetching from Smithsonian API:", error);
-    throw error;
+    return []; // Return empty array instead of throwing
   }
 };
 
@@ -110,7 +136,7 @@ export const getArtworkDetailsSmithsonian = async (artworkId) => {
     };
   } catch (error) {
     console.error("Error fetching Smithsonian artwork details:", error);
-    throw error;
+    return null; // Return null instead of throwing
   }
 };
 
