@@ -386,8 +386,6 @@
   flex-direction: column;
   position: relative;
   z-index: 2;
-  height: 200px;
-  overflow: hidden;
 }
 
 .artwork-info h3 {
