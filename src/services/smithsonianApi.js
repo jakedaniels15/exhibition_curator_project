@@ -44,12 +44,8 @@ export const searchArtworksSmithsonian = async (query, limit = 20) => {
                   "Medium unknown",
           museum: artwork.unitCode ? getMuseumName(artwork.unitCode) : "Smithsonian Institution",
           museumCode: "SMITHSONIAN",
-          imageUrl: artwork.content?.descriptiveNonRepeating?.online_media?.media?.[0]?.content || 
-                    artwork.content?.descriptiveNonRepeating?.online_media?.media?.[0]?.idsId || 
-                    null,
-          thumbnailUrl: artwork.content?.descriptiveNonRepeating?.online_media?.media?.[0]?.thumbnail || 
-                        artwork.content?.descriptiveNonRepeating?.online_media?.media?.[0]?.content || 
-                        null,
+          imageUrl: getImageUrl(artwork.content?.descriptiveNonRepeating?.online_media?.media),
+          thumbnailUrl: getThumbnailUrl(artwork.content?.descriptiveNonRepeating?.online_media?.media),
           department: artwork.content?.indexedStructured?.topic?.[0] || null,
           artworkType: artwork.content?.indexedStructured?.object_type?.[0] || 
                        artwork.content?.indexedStructured?.type?.[0] || null,
@@ -69,6 +65,8 @@ export const searchArtworksSmithsonian = async (query, limit = 20) => {
     console.log('Smithsonian API processed results:', results.length, 'items');
     if (results.length > 0) {
       console.log('Sample result:', results[0]);
+      console.log('Sample result has image:', !!results[0].imageUrl);
+      console.log('Sample result has thumbnail:', !!results[0].thumbnailUrl);
     }
     
     return results;
@@ -114,8 +112,8 @@ export const getArtworkDetailsSmithsonian = async (artworkId) => {
                   "Dimensions unknown",
       museum: artwork.unitCode ? getMuseumName(artwork.unitCode) : "Smithsonian Institution",
       museumCode: "SMITHSONIAN",
-      imageUrl: artwork.content?.descriptiveNonRepeating?.online_media?.media?.[0]?.content || null,
-      thumbnailUrl: artwork.content?.descriptiveNonRepeating?.online_media?.media?.[0]?.thumbnail || null,
+      imageUrl: getImageUrl(artwork.content?.descriptiveNonRepeating?.online_media?.media),
+      thumbnailUrl: getThumbnailUrl(artwork.content?.descriptiveNonRepeating?.online_media?.media),
       department: artwork.content?.indexedStructured?.topic?.[0] || null,
       artworkType: artwork.content?.indexedStructured?.object_type?.[0] || 
                    artwork.content?.indexedStructured?.type?.[0] || null,
@@ -163,4 +161,43 @@ const getMuseumName = (unitCode) => {
   };
   
   return museumMap[unitCode] || 'Smithsonian Institution';
+};
+
+// Helper function to extract image URL from Smithsonian media data
+const getImageUrl = (mediaArray) => {
+  if (!mediaArray || !Array.isArray(mediaArray) || mediaArray.length === 0) {
+    return null;
+  }
+  
+  for (const media of mediaArray) {
+    // Try different possible image URL fields
+    if (media.content && media.content.includes('http')) {
+      return media.content;
+    }
+    if (media.idsId && media.idsId.includes('http')) {
+      return media.idsId;
+    }
+    if (media.thumbnail && media.thumbnail.includes('http')) {
+      return media.thumbnail;
+    }
+  }
+  return null;
+};
+
+// Helper function to extract thumbnail URL from Smithsonian media data
+const getThumbnailUrl = (mediaArray) => {
+  if (!mediaArray || !Array.isArray(mediaArray) || mediaArray.length === 0) {
+    return null;
+  }
+  
+  for (const media of mediaArray) {
+    // Prefer smaller thumbnail images
+    if (media.thumbnail && media.thumbnail.includes('http')) {
+      return media.thumbnail;
+    }
+    if (media.content && media.content.includes('http')) {
+      return media.content;
+    }
+  }
+  return null;
 };
