@@ -1,0 +1,103 @@
+.image-magnifier {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  cursor: none;
+}
+
+.magnifier-image {
+  width: 100%;
+  height: auto;
+  max-height: 70vh;
+  object-fit: contain;
+  border-radius: 10px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease;
+}
+
+.magnifier-image:hover {
+  transform: scale(1.02);
+}
+
+.image-placeholder {
+  width: 100%;
+  height: 400px;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6c757d;
+  font-weight: 500;
+  font-size: 1.2rem;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+}
+
+.magnifier-glass {
+  position: fixed;
+  border: 3px solid #fff;
+  border-radius: 50%;
+  cursor: none;
+  z-index: 1000;
+  pointer-events: none;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3), inset 0 0 20px rgba(0, 0, 0, 0.1);
+  background-repeat: no-repeat;
+  animation: magnifierAppear 0.2s ease-out;
+}
+
+@keyframes magnifierAppear {
+  from {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.magnifier-hint {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.7);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.image-magnifier:hover .magnifier-hint {
+  opacity: 1;
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .image-magnifier {
+    cursor: default;
+  }
+  
+  .magnifier-glass {
+    display: none; /* Disable magnifier on mobile */
+  }
+  
+  .magnifier-hint {
+    display: none;
+  }
+  
+  .magnifier-image {
+    max-height: 50vh;
+  }
+}
+
+/* High-resolution displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .magnifier-glass {
+    background-size: auto;
+  }
+}
