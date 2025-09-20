@@ -477,7 +477,9 @@ function Search() {
         </div>
         <div className="header-content">
           <h1>Browse Artworks</h1>
-          {searchParams.get('museum') ? (
+          {currentSearchTerm ? (
+            <p className="museum-subtitle">Exploring "{currentSearchTerm}"</p>
+          ) : searchParams.get('museum') ? (
             <p className="museum-subtitle">Exploring {searchParams.get('museum')}</p>
           ) : (
             <p>Discover masterpieces from world-renowned museums</p>

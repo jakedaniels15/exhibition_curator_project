@@ -101,6 +101,38 @@ function SearchBar({ onSearch, isLoading, initialValue = "" }) {
           >
             Renaissance
           </button>
+          <button
+            onClick={() => onSearch("Impressionism")}
+            className="preset-button"
+            disabled={isLoading}
+            aria-label="Search for Impressionist artworks"
+          >
+            Impressionism
+          </button>
+          <button
+            onClick={() => onSearch("Abstract")}
+            className="preset-button"
+            disabled={isLoading}
+            aria-label="Search for Abstract artworks"
+          >
+            Abstract
+          </button>
+          <button
+            onClick={() => onSearch("Sculpture")}
+            className="preset-button"
+            disabled={isLoading}
+            aria-label="Search for Sculpture artworks"
+          >
+            Sculpture
+          </button>
+          <button
+            onClick={() => onSearch("Modern Art")}
+            className="preset-button"
+            disabled={isLoading}
+            aria-label="Search for Modern Art"
+          >
+            Modern Art
+          </button>
         </div>
       </div>
       <div aria-live="polite" aria-atomic="true" className="sr-only" id="search-status">
