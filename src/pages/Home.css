@@ -134,6 +134,31 @@
   position: relative;
   height: 200px;
   overflow: hidden;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.aic-image {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.met-image {
+  background: linear-gradient(135deg, #ff7e5f 0%, #feb47b 100%);
+}
+
+.museum-pattern {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(circle at 50% 50%, rgba(255,255,255,0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
+  transition: transform 0.3s ease;
+}
+
+.museum-card-link:hover .museum-pattern {
+  transform: scale(1.1);
 }
 
 .museum-image img {
@@ -153,7 +178,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.7) 0%, rgba(118, 75, 162, 0.7) 100%);
+  background: rgba(0, 0, 0, 0.3);
   opacity: 0;
   transition: opacity 0.3s ease;
   display: flex;

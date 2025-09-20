@@ -25,12 +25,8 @@ function Home() {
             to="/search?museum=Art Institute of Chicago" 
             className="museum-card museum-card-link"
           >
-            <div className="museum-image">
-              <img 
-                src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400&h=200&fit=crop&crop=building" 
-                alt="Art Institute of Chicago building exterior"
-                onError={(e) => {e.target.src = 'https://via.placeholder.com/400x200/667eea/ffffff?text=Art+Institute+of+Chicago'}}
-              />
+            <div className="museum-image aic-image">
+              <div className="museum-pattern"></div>
               <div className="museum-overlay">
                 <div className="museum-badge">AIC</div>
               </div>
@@ -47,12 +43,8 @@ function Home() {
             to="/search?museum=Metropolitan Museum of Art" 
             className="museum-card museum-card-link"
           >
-            <div className="museum-image">
-              <img 
-                src="https://images.unsplash.com/photo-1549833284-6a7b46fa1a9b?w=400&h=200&fit=crop&crop=building" 
-                alt="Metropolitan Museum of Art building exterior"
-                onError={(e) => {e.target.src = 'https://via.placeholder.com/400x200/764ba2/ffffff?text=Metropolitan+Museum'}}
-              />
+            <div className="museum-image met-image">
+              <div className="museum-pattern"></div>
               <div className="museum-overlay">
                 <div className="museum-badge">MET</div>
               </div>
