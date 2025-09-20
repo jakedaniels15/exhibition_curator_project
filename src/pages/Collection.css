@@ -521,7 +521,7 @@
 
 /* Add to Collection Card */
 .add-card-wrapper {
-  margin-left: 2rem;
+  margin-left: 5px;
 }
 
 .add-to-collection-card {
@@ -658,7 +658,7 @@
   }
 
   .add-card-wrapper {
-    margin-left: 1.5rem;
+    margin-left: 5px;
   }
 
   .collection-artwork-card {
@@ -791,7 +791,7 @@
   }
 
   .add-card-wrapper {
-    margin-left: 1rem;
+    margin-left: 5px;
   }
 
   .collection-artwork-card {
