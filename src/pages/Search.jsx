@@ -376,9 +376,14 @@ function Search() {
   return (
     <div className="search-page">
       <header className="search-header">
-        <Link to="/" className="back-link">
-          ← Back to Home
-        </Link>
+        <div className="nav-links">
+          <Link to="/" className="back-link">
+            ← Back to Home
+          </Link>
+          <Link to="/collection" className="collection-link">
+            My Collection →
+          </Link>
+        </div>
         <div className="header-content">
           <h1>Browse Artworks</h1>
           {searchParams.get('museum') ? (
