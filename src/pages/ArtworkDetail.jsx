@@ -12,7 +12,6 @@ function ArtworkDetail() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isInCollection, setIsInCollection] = useState(false);
-  const [collectionMessage, setCollectionMessage] = useState('');
 
   useEffect(() => {
     const fetchArtworkDetails = async () => {
@@ -45,19 +44,12 @@ function ArtworkDetail() {
       const result = collectionService.removeFromCollection(artwork.id);
       if (result.success) {
         setIsInCollection(false);
-        setCollectionMessage('Removed from collection');
-        setTimeout(() => setCollectionMessage(''), 3000);
       }
     } else {
       // Add to collection
       const result = collectionService.addToCollection(artwork);
       if (result.success) {
         setIsInCollection(true);
-        setCollectionMessage('Added to collection!');
-        setTimeout(() => setCollectionMessage(''), 3000);
-      } else {
-        setCollectionMessage(result.message);
-        setTimeout(() => setCollectionMessage(''), 3000);
       }
     }
   };
@@ -100,11 +92,6 @@ function ArtworkDetail() {
           ← Back
         </button>
         <div className="header-actions">
-          {collectionMessage && (
-            <div className="collection-message">
-              {collectionMessage}
-            </div>
-          )}
           <button
             onClick={handleAddToCollection}
             className={`add-to-collection-btn ${isInCollection ? 'in-collection' : ''}`}
