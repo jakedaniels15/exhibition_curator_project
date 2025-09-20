@@ -519,6 +519,97 @@
   box-shadow: 0 4px 15px rgba(139, 69, 19, 0.3);
 }
 
+/* Add to Collection Card */
+.add-to-collection-card {
+  background: rgba(245, 245, 240, 0.95);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 
+    0 0 0 8px rgba(212, 175, 55, 0.6),
+    0 0 0 12px rgba(139, 69, 19, 0.4),
+    0 15px 35px rgba(0, 0, 0, 0.15);
+  transition: all 0.4s ease;
+  position: relative;
+  border: 3px dashed #d4af37;
+  width: 280px;
+  height: 420px;
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.add-to-collection-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 
+    0 0 0 8px rgba(212, 175, 55, 0.8),
+    0 0 0 12px rgba(139, 69, 19, 0.6),
+    0 20px 45px rgba(0, 0, 0, 0.25);
+  border-color: #b8941f;
+}
+
+.add-icon-container {
+  width: 120px;
+  height: 120px;
+  border: 3px dashed #d4af37;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2rem;
+  transition: all 0.3s ease;
+}
+
+.add-to-collection-card:hover .add-icon-container {
+  border-color: #b8941f;
+  background: rgba(212, 175, 55, 0.1);
+}
+
+.plus-icon {
+  font-size: 3rem;
+  color: #d4af37;
+  font-weight: 300;
+  line-height: 1;
+  transition: all 0.3s ease;
+}
+
+.add-to-collection-card:hover .plus-icon {
+  color: #b8941f;
+  transform: rotate(90deg);
+}
+
+.add-card-content {
+  padding: 0 1rem;
+}
+
+.add-card-title {
+  color: #3a5f3a;
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  font-family: 'Georgia', serif;
+}
+
+.add-card-subtitle {
+  color: #d4af37;
+  font-size: 0.9rem;
+  font-weight: 600;
+  font-style: italic;
+  margin: 0;
+}
+
+.add-to-collection-card:hover .add-card-title {
+  color: #2a4f2a;
+}
+
+.add-to-collection-card:hover .add-card-subtitle {
+  color: #b8941f;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .collection-header {
@@ -569,6 +660,33 @@
       0 0 0 6px rgba(212, 175, 55, 0.8),
       0 0 0 9px rgba(139, 69, 19, 0.6),
       0 10px 25px rgba(0, 0, 0, 0.2);
+  }
+
+  .add-to-collection-card {
+    width: 250px;
+    height: 350px;
+    box-shadow: 
+      0 0 0 6px rgba(212, 175, 55, 0.5),
+      0 0 0 9px rgba(139, 69, 19, 0.3),
+      0 10px 25px rgba(0, 0, 0, 0.15);
+  }
+
+  .add-icon-container {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 1.5rem;
+  }
+
+  .plus-icon {
+    font-size: 2.5rem;
+  }
+
+  .add-card-title {
+    font-size: 1rem;
+  }
+
+  .add-card-subtitle {
+    font-size: 0.85rem;
   }
 
   .collection-content {
@@ -671,6 +789,33 @@
       0 0 0 4px rgba(212, 175, 55, 0.8),
       0 0 0 7px rgba(139, 69, 19, 0.6),
       0 8px 20px rgba(0, 0, 0, 0.2);
+  }
+
+  .add-to-collection-card {
+    width: 220px;
+    height: 320px;
+    box-shadow: 
+      0 0 0 4px rgba(212, 175, 55, 0.5),
+      0 0 0 7px rgba(139, 69, 19, 0.3),
+      0 8px 20px rgba(0, 0, 0, 0.15);
+  }
+
+  .add-icon-container {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 1rem;
+  }
+
+  .plus-icon {
+    font-size: 2rem;
+  }
+
+  .add-card-title {
+    font-size: 0.95rem;
+  }
+
+  .add-card-subtitle {
+    font-size: 0.8rem;
   }
 
   .artwork-image-container {
