@@ -369,7 +369,7 @@
   align-items: flex-start;
   width: 100%;
   flex-wrap: wrap;
-  justify-content: space-around;
+  justify-content: flex-start;
 }
 
 .collection-artwork-card {
@@ -541,6 +541,7 @@
   align-items: center;
   justify-content: center;
   text-align: center;
+  margin-left: 2rem;
 }
 
 .add-to-collection-card:hover {
@@ -648,7 +649,6 @@
   }
 
   .artworks-grid {
-    gap: 1.5rem;
     padding: 1rem;
     justify-content: space-around;
   }
@@ -778,7 +778,6 @@
 
   .artworks-grid {
   .artworks-grid {
-    gap: 1rem;
     padding: 1rem 0.5rem;
     justify-content: space-around;
   }
