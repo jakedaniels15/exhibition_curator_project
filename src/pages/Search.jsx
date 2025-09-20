@@ -189,12 +189,12 @@ function Search() {
   // Get unique museums from current results for filter dropdown
   const availableMuseums = [...new Set(searchResults.map(artwork => artwork.museum).filter(Boolean))];
   
-  // Always include the three main museums in dropdown even if no current results
+    // Always include the working museums in dropdown even if no current results
   const allMuseums = [...new Set([
     ...availableMuseums,
     'Art Institute of Chicago',
-    'Metropolitan Museum of Art', 
-    'Smithsonian Institution'
+    'Metropolitan Museum of Art',
+    'Rijksmuseum'
   ])].sort();
 
   // Get unique art types from current results for filter dropdown
@@ -275,7 +275,7 @@ function Search() {
       setSearchResults(results);
 
       if (results.length === 0) {
-        setError("No artworks found. Try a different search term.");
+        setError("No artworks found. Some museum APIs may be temporarily unavailable. Try a different search term or try again later.");
       }
     } catch (error) {
       console.error("Search failed:", error);
@@ -590,7 +590,7 @@ function Search() {
               <ul>
                 <li>Art Institute of Chicago</li>
                 <li>Metropolitan Museum of Art</li>
-                <li>Smithsonian Institution</li>
+                <li>Rijksmuseum</li>
               </ul>
             </div>
           </div>

@@ -21,8 +21,8 @@ function Home() {
       <section className="museums-section">
         <h2>Museums You Can Explore</h2>
         <div className="museums-list">
-          <Link 
-            to="/search?museum=Art Institute of Chicago" 
+          <Link
+            to="/search?museum=Art Institute of Chicago"
             className="museum-card museum-card-link"
           >
             <div className="museum-image aic-image">
@@ -39,8 +39,8 @@ function Home() {
               <span className="explore-link">Explore Collection →</span>
             </div>
           </Link>
-          <Link 
-            to="/search?museum=Metropolitan Museum of Art" 
+          <Link
+            to="/search?museum=Metropolitan Museum of Art"
             className="museum-card museum-card-link"
           >
             <div className="museum-image met-image">
@@ -58,19 +58,19 @@ function Home() {
             </div>
           </Link>
           <Link 
-            to="/search?museum=Smithsonian Institution" 
+            to="/search?museum=Rijksmuseum" 
             className="museum-card museum-card-link"
           >
-            <div className="museum-image smithsonian-image">
+            <div className="museum-image rijks-image">
               <div className="museum-pattern"></div>
               <div className="museum-overlay">
-                <div className="museum-badge">SI</div>
+                <div className="museum-badge">RM</div>
               </div>
             </div>
             <div className="museum-content">
-              <h3>Smithsonian Institution</h3>
+              <h3>Rijksmuseum</h3>
               <p>
-                Explore diverse collections from America's national museums
+                Explore masterpieces from the Netherlands' premier art museum
               </p>
               <span className="explore-link">Explore Collection →</span>
             </div>

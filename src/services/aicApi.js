@@ -3,6 +3,8 @@ const AIC_BASE_URL = "https://api.artic.edu/api/v1";
 
 export const searchArtworksAIC = async (query, limit = 20) => {
   try {
+    console.log('AIC API: Searching for:', query);
+    
     const response = await fetch(
       `${AIC_BASE_URL}/artworks/search?q=${encodeURIComponent(
         query
@@ -10,13 +12,14 @@ export const searchArtworksAIC = async (query, limit = 20) => {
     );
 
     if (!response.ok) {
-      throw new Error(`AIC API error: ${response.status}`);
+      console.error(`AIC API error: ${response.status} ${response.statusText}`);
+      return []; // Return empty array instead of throwing
     }
 
     const data = await response.json();
 
     // Transform the data to our standardized format
-    return data.data.map((artwork) => ({
+    const results = data.data.map((artwork) => ({
       id: `aic-${artwork.id}`,
       title: artwork.title || "Untitled",
       artist: artwork.artist_display || "Unknown Artist",
@@ -37,9 +40,12 @@ export const searchArtworksAIC = async (query, limit = 20) => {
       museumUrl: `https://www.artic.edu/artworks/${artwork.id}`,
       originalData: artwork,
     }));
+    
+    console.log('AIC API: Successfully retrieved', results.length, 'artworks');
+    return results;
   } catch (error) {
     console.error("Error fetching from AIC API:", error);
-    throw error;
+    return []; // Return empty array instead of throwing
   }
 };
 
@@ -53,7 +59,8 @@ export const getArtworkDetailsAIC = async (artworkId) => {
     );
 
     if (!response.ok) {
-      throw new Error(`AIC API error: ${response.status}`);
+      console.warn(`AIC API details error: ${response.status} for ID ${cleanId}`);
+      return null; // Return null instead of throwing
     }
 
     const result = await response.json();
@@ -90,6 +97,6 @@ export const getArtworkDetailsAIC = async (artworkId) => {
     };
   } catch (error) {
     console.error("Error fetching artwork details from AIC API:", error);
-    throw error;
+    return null; // Return null instead of throwing
   }
 };

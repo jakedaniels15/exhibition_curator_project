@@ -3,18 +3,22 @@ const MET_BASE_URL = "https://collectionapi.metmuseum.org/public/collection/v1";
 
 export const searchArtworksMet = async (query, limit = 20) => {
   try {
+    console.log('Met API: Searching for:', query);
+    
     // First, search for object IDs
     const searchResponse = await fetch(
       `${MET_BASE_URL}/search?hasImages=true&q=${encodeURIComponent(query)}`
     );
 
     if (!searchResponse.ok) {
-      throw new Error(`Met API search error: ${searchResponse.status}`);
+      console.error(`Met API search error: ${searchResponse.status} ${searchResponse.statusText}`);
+      return []; // Return empty array instead of throwing
     }
 
     const searchData = await searchResponse.json();
 
     if (!searchData.objectIDs || searchData.objectIDs.length === 0) {
+      console.log('Met API: No results found');
       return [];
     }
 
@@ -27,15 +31,16 @@ export const searchArtworksMet = async (query, limit = 20) => {
     // Fetch all artworks in parallel, but handle failures gracefully
     const results = await Promise.allSettled(artworkPromises);
 
-    // Filter out failed requests and return successful ones
-    return results
-      .filter(
-        (result) => result.status === "fulfilled" && result.value !== null
-      )
+        // Filter out failed requests and return successful ones
+    const successfulArtworks = results
+      .filter((result) => result.status === "fulfilled" && result.value !== null)
       .map((result) => result.value);
+
+    console.log('Met API: Successfully retrieved', successfulArtworks.length, 'artworks');
+    return successfulArtworks;
   } catch (error) {
     console.error("Error fetching from Met API:", error);
-    throw error;
+    return []; // Return empty array instead of throwing
   }
 };
 
@@ -47,7 +52,8 @@ export const getArtworkDetailsMet = async (artworkId) => {
     const response = await fetch(`${MET_BASE_URL}/objects/${cleanId}`);
 
     if (!response.ok) {
-      throw new Error(`Met API error: ${response.status}`);
+      console.warn(`Met API object details error: ${response.status} for ID ${cleanId}`);
+      return null; // Return null instead of throwing
     }
 
     const artwork = await response.json();
