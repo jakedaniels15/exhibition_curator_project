@@ -369,7 +369,7 @@
   align-items: flex-start;
   width: 100%;
   flex-wrap: wrap;
-  justify-content: flex-start;
+  justify-content: center;
 }
 
 .collection-artwork-card {
@@ -521,28 +521,21 @@
 
 /* Add to Collection Card */
 .add-to-collection-card {
-  background: rgba(245, 245, 240, 0.95);
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 
-    0 0 0 8px rgba(212, 175, 55, 0.6),
-    0 0 0 12px rgba(139, 69, 19, 0.4),
-    0 15px 35px rgba(0, 0, 0, 0.15);
-  transition: all 0.4s ease;
-  position: relative;
-  border: 3px dashed #d4af37;
-  width: 280px;
-  height: 420px;
+  background: #fff;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  padding: 2rem;
   display: flex;
   flex-direction: column;
-  text-decoration: none;
-  color: inherit;
-  cursor: pointer;
   align-items: center;
   justify-content: center;
   text-align: center;
-  margin-left: 100px;
-  border-left: 5px solid red;
+  transition: all 0.3s ease;
+  height: 300px;
+  cursor: pointer;
+  text-decoration: none;
+  color: #666;
+  margin-left: 20px;
 }
 
 .add-to-collection-card:hover {
@@ -827,4 +820,5 @@
   .collection-content::-webkit-scrollbar {
     height: 8px;
   }
+}
 }
