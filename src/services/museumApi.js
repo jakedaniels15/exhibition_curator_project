@@ -1,13 +1,15 @@
 import { searchArtworksAIC, getArtworkDetailsAIC } from "./aicApi.js";
 import { searchArtworksMet, getArtworkDetailsMet } from "./metApi.js";
+import { searchArtworksSmithsonian, getArtworkDetailsSmithsonian } from "./smithsonianApi.js";
 
-// Combined search function that queries both museums
+// Combined search function that queries all museums
 export const searchAllMuseums = async (query, limitPerMuseum = 10) => {
   try {
-    // Search both APIs in parallel
-    const [aicResults, metResults] = await Promise.allSettled([
+    // Search all APIs in parallel
+    const [aicResults, metResults, smithsonianResults] = await Promise.allSettled([
       searchArtworksAIC(query, limitPerMuseum),
       searchArtworksMet(query, limitPerMuseum),
+      searchArtworksSmithsonian(query, limitPerMuseum),
     ]);
 
     // Combine results, handling any failures gracefully
@@ -25,7 +27,13 @@ export const searchAllMuseums = async (query, limitPerMuseum = 10) => {
       console.warn("Met search failed:", metResults.reason);
     }
 
-    // Shuffle results to mix artworks from both museums
+    if (smithsonianResults.status === "fulfilled") {
+      allResults.push(...smithsonianResults.value);
+    } else {
+      console.warn("Smithsonian search failed:", smithsonianResults.reason);
+    }
+
+    // Shuffle results to mix artworks from all museums
     return shuffleArray(allResults);
   } catch (error) {
     console.error("Error in combined museum search:", error);
@@ -111,6 +119,8 @@ export const getArtworkDetails = async (artworkId) => {
       return await getArtworkDetailsAIC(artworkId);
     } else if (artworkId.startsWith("met-")) {
       return await getArtworkDetailsMet(artworkId);
+    } else if (artworkId.startsWith("smithsonian-")) {
+      return await getArtworkDetailsSmithsonian(artworkId);
     } else {
       throw new Error(`Unknown artwork ID format: ${artworkId}`);
     }
@@ -141,6 +151,9 @@ export const searchMuseum = async (query, museum, limit = 20) => {
       case "metropolitan museum":
       case "metropolitan museum of art":
         return await searchArtworksMet(query, limit);
+      case "smithsonian":
+      case "smithsonian institution":
+        return await searchArtworksSmithsonian(query, limit);
       default:
         throw new Error(`Unknown museum: ${museum}`);
     }

@@ -57,6 +57,24 @@ function Home() {
               <span className="explore-link">Explore Collection →</span>
             </div>
           </Link>
+          <Link 
+            to="/search?museum=Smithsonian Institution" 
+            className="museum-card museum-card-link"
+          >
+            <div className="museum-image smithsonian-image">
+              <div className="museum-pattern"></div>
+              <div className="museum-overlay">
+                <div className="museum-badge">SI</div>
+              </div>
+            </div>
+            <div className="museum-content">
+              <h3>Smithsonian Institution</h3>
+              <p>
+                Explore diverse collections from America's national museums
+              </p>
+              <span className="explore-link">Explore Collection →</span>
+            </div>
+          </Link>
         </div>
         <Link to="/search" className="browse-button">
           Browse All Artworks

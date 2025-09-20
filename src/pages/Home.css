@@ -130,8 +130,8 @@
 }
 
 .museums-list {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 1.5rem;
   margin-bottom: 2rem;
 }
@@ -242,6 +242,13 @@
 
 .met-image {
   background: url('../assets/Met-Museum-1.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.smithsonian-image {
+  background: url('../assets/Smithsonian_Building_Sunlight.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;

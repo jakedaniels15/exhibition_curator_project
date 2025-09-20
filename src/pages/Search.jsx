@@ -573,6 +573,7 @@ function Search() {
               <ul>
                 <li>Art Institute of Chicago</li>
                 <li>Metropolitan Museum of Art</li>
+                <li>Smithsonian Institution</li>
               </ul>
             </div>
           </div>
