@@ -48,6 +48,22 @@
   transform: translateY(-2px);
 }
 
+.add-to-collection-btn.in-collection {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  color: white;
+}
+
+.collection-message {
+  background: #d4edda;
+  color: #155724;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  margin-right: 1rem;
+  border: 1px solid #c3e6cb;
+}
+
 .artwork-detail-content {
   width: 100%;
   padding: 2rem;
@@ -156,23 +172,27 @@
   line-height: 1.6;
 }
 
-.artwork-subjects, .artwork-materials {
+.artwork-subjects,
+.artwork-materials {
   margin-bottom: 2rem;
 }
 
-.artwork-subjects h3, .artwork-materials h3 {
+.artwork-subjects h3,
+.artwork-materials h3 {
   color: #2c3e50;
   margin-bottom: 1rem;
   font-size: 1.1rem;
 }
 
-.subject-tags, .material-tags {
+.subject-tags,
+.material-tags {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
 }
 
-.subject-tag, .material-tag {
+.subject-tag,
+.material-tag {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   padding: 0.4rem 0.8rem;
@@ -203,7 +223,8 @@
 }
 
 /* Loading and Error States */
-.loading-container, .error-container {
+.loading-container,
+.error-container {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -238,7 +259,7 @@
     grid-template-columns: 1fr;
     gap: 2rem;
   }
-  
+
   .artwork-image-section {
     position: static;
   }
@@ -251,19 +272,19 @@
     gap: 1rem;
     position: static;
   }
-  
+
   .artwork-detail-content {
     padding: 1rem;
   }
-  
+
   .artwork-info-section {
     padding: 1.5rem;
   }
-  
+
   .artwork-title {
     font-size: 2rem;
   }
-  
+
   .detail-grid {
     grid-template-columns: 1fr;
     gap: 1rem;
@@ -274,11 +295,11 @@
   .artwork-title {
     font-size: 1.5rem;
   }
-  
+
   .artwork-artist {
     font-size: 1.1rem;
   }
-  
+
   .museum-link {
     padding: 0.75rem 1.5rem;
     font-size: 0.9rem;

@@ -81,15 +81,15 @@
   .image-magnifier {
     cursor: default;
   }
-  
+
   .magnifier-glass {
     display: none; /* Disable magnifier on mobile */
   }
-  
+
   .magnifier-hint {
     display: none;
   }
-  
+
   .magnifier-image {
     max-height: 50vh;
   }

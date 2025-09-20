@@ -1,46 +1,70 @@
-import { useState, useEffect } from 'react'
-import { useParams, Link, useNavigate } from 'react-router-dom'
-import ImageMagnifier from '../components/ImageMagnifier'
-import { getArtworkDetails } from '../services/museumApi'
-import './ArtworkDetail.css'
+import { useState, useEffect } from "react";
+import { useParams, Link, useNavigate } from "react-router-dom";
+import ImageMagnifier from "../components/ImageMagnifier";
+import { getArtworkDetails } from "../services/museumApi";
+import { collectionService } from "../services/collectionService";
+import "./ArtworkDetail.css";
 
 function ArtworkDetail() {
-  const { id } = useParams()
-  const navigate = useNavigate()
-  const [artwork, setArtwork] = useState(null)
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState(null)
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const [artwork, setArtwork] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [isInCollection, setIsInCollection] = useState(false);
+  const [collectionMessage, setCollectionMessage] = useState('');
 
   useEffect(() => {
     const fetchArtworkDetails = async () => {
-      setIsLoading(true)
-      setError(null)
-      
+      setIsLoading(true);
+      setError(null);
+
       try {
-        const artworkData = await getArtworkDetails(id)
-        setArtwork(artworkData)
+        const artworkData = await getArtworkDetails(id);
+        setArtwork(artworkData);
+        // Check if this artwork is already in collection
+        setIsInCollection(collectionService.isInCollection(id));
       } catch (error) {
-        console.error('Error fetching artwork details:', error)
-        setError('Failed to load artwork details. Please try again.')
+        console.error("Error fetching artwork details:", error);
+        setError("Failed to load artwork details. Please try again.");
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
-    }
+    };
 
     if (id) {
-      fetchArtworkDetails()
+      fetchArtworkDetails();
     }
-  }, [id])
+  }, [id]);
 
   const handleAddToCollection = () => {
-    // TODO: Implement collection functionality
-    console.log('Adding to collection:', artwork?.title)
-    alert(`"${artwork?.title}" will be added to your collection!`)
-  }
+    if (!artwork) return;
+    
+    if (isInCollection) {
+      // Remove from collection
+      const result = collectionService.removeFromCollection(artwork.id);
+      if (result.success) {
+        setIsInCollection(false);
+        setCollectionMessage('Removed from collection');
+        setTimeout(() => setCollectionMessage(''), 3000);
+      }
+    } else {
+      // Add to collection
+      const result = collectionService.addToCollection(artwork);
+      if (result.success) {
+        setIsInCollection(true);
+        setCollectionMessage('Added to collection!');
+        setTimeout(() => setCollectionMessage(''), 3000);
+      } else {
+        setCollectionMessage(result.message);
+        setTimeout(() => setCollectionMessage(''), 3000);
+      }
+    }
+  };
 
   const handleBackClick = () => {
-    navigate(-1) // Go back to previous page
-  }
+    navigate(-1); // Go back to previous page
+  };
 
   if (isLoading) {
     return (
@@ -50,7 +74,7 @@ function ArtworkDetail() {
           <p>Loading artwork details...</p>
         </div>
       </div>
-    )
+    );
   }
 
   if (error || !artwork) {
@@ -58,16 +82,16 @@ function ArtworkDetail() {
       <div className="artwork-detail-page">
         <div className="error-container">
           <h2>Artwork Not Found</h2>
-          <p>{error || 'This artwork could not be found.'}</p>
+          <p>{error || "This artwork could not be found."}</p>
           <button onClick={handleBackClick} className="back-button">
             ← Go Back
           </button>
         </div>
       </div>
-    )
+    );
   }
 
-  const imageUrl = artwork.imageUrl || artwork.thumbnailUrl
+  const imageUrl = artwork.imageUrl || artwork.thumbnailUrl;
 
   return (
     <div className="artwork-detail-page">
@@ -76,8 +100,16 @@ function ArtworkDetail() {
           ← Back
         </button>
         <div className="header-actions">
-          <button onClick={handleAddToCollection} className="add-to-collection-btn">
-            Add to Collection
+          {collectionMessage && (
+            <div className="collection-message">
+              {collectionMessage}
+            </div>
+          )}
+          <button
+            onClick={handleAddToCollection}
+            className={`add-to-collection-btn ${isInCollection ? 'in-collection' : ''}`}
+          >
+            {isInCollection ? '✓ In Collection' : 'Add to Collection'}
           </button>
         </div>
       </header>
@@ -111,42 +143,42 @@ function ArtworkDetail() {
                 <label>Museum</label>
                 <span>{artwork.museum}</span>
               </div>
-              
+
               {artwork.medium && (
                 <div className="detail-item">
                   <label>Medium</label>
                   <span>{artwork.medium}</span>
                 </div>
               )}
-              
+
               {artwork.dimensions && (
                 <div className="detail-item">
                   <label>Dimensions</label>
                   <span>{artwork.dimensions}</span>
                 </div>
               )}
-              
+
               {artwork.department && (
                 <div className="detail-item">
                   <label>Department</label>
                   <span>{artwork.department}</span>
                 </div>
               )}
-              
+
               {artwork.placeOfOrigin && (
                 <div className="detail-item">
                   <label>Place of Origin</label>
                   <span>{artwork.placeOfOrigin}</span>
                 </div>
               )}
-              
+
               {artwork.classification && (
                 <div className="detail-item">
                   <label>Classification</label>
                   <span>{artwork.classification}</span>
                 </div>
               )}
-              
+
               {artwork.creditLine && (
                 <div className="detail-item">
                   <label>Credit Line</label>
@@ -167,7 +199,9 @@ function ArtworkDetail() {
                 <h3>Subjects</h3>
                 <div className="subject-tags">
                   {artwork.subjects.slice(0, 8).map((subject, index) => (
-                    <span key={index} className="subject-tag">{subject}</span>
+                    <span key={index} className="subject-tag">
+                      {subject}
+                    </span>
                   ))}
                 </div>
               </div>
@@ -178,7 +212,9 @@ function ArtworkDetail() {
                 <h3>Materials</h3>
                 <div className="material-tags">
                   {artwork.materials.slice(0, 6).map((material, index) => (
-                    <span key={index} className="material-tag">{material}</span>
+                    <span key={index} className="material-tag">
+                      {material}
+                    </span>
                   ))}
                 </div>
               </div>
@@ -187,9 +223,9 @@ function ArtworkDetail() {
 
           <div className="external-links">
             {artwork.museumUrl && (
-              <a 
-                href={artwork.museumUrl} 
-                target="_blank" 
+              <a
+                href={artwork.museumUrl}
+                target="_blank"
                 rel="noopener noreferrer"
                 className="museum-link"
               >
@@ -200,7 +236,7 @@ function ArtworkDetail() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default ArtworkDetail
+export default ArtworkDetail;

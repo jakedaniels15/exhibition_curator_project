@@ -1,5 +1,5 @@
-import { Link } from 'react-router-dom'
-import './Home.css'
+import { Link } from "react-router-dom";
+import "./Home.css";
 
 function Home() {
   return (
@@ -7,7 +7,8 @@ function Home() {
       <header className="home-header">
         <h1 className="app-title">MyMuseum</h1>
         <p className="app-tagline">
-          Create your own personalised exhibition from the world's most famous galleries
+          Create your own personalised exhibition from the world's most famous
+          galleries
         </p>
       </header>
 
@@ -22,11 +23,15 @@ function Home() {
         <div className="museums-list">
           <div className="museum-card">
             <h3>Art Institute of Chicago</h3>
-            <p>Explore masterpieces from one of America's premier art museums</p>
+            <p>
+              Explore masterpieces from one of America's premier art museums
+            </p>
           </div>
           <div className="museum-card">
             <h3>Metropolitan Museum of Art</h3>
-            <p>Discover treasures from New York's iconic cultural institution</p>
+            <p>
+              Discover treasures from New York's iconic cultural institution
+            </p>
           </div>
         </div>
         <Link to="/search" className="browse-button">
@@ -34,7 +39,7 @@ function Home() {
         </Link>
       </section>
     </div>
-  )
+  );
 }
 
-export default Home
+export default Home;

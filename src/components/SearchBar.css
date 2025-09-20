@@ -68,8 +68,12 @@
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .search-presets {
@@ -114,25 +118,25 @@
   .search-bar {
     padding: 1rem;
   }
-  
+
   .search-input-container {
     border-radius: 25px;
   }
-  
+
   .search-input {
     padding: 0.875rem 1.25rem;
     font-size: 1rem;
   }
-  
+
   .search-button {
     padding: 0.875rem 1.25rem;
     min-width: 50px;
   }
-  
+
   .search-presets {
     justify-content: flex-start;
   }
-  
+
   .presets-label {
     width: 100%;
     margin-bottom: 0.5rem;

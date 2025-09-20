@@ -41,7 +41,9 @@
   width: 100%;
 }
 
-.loading-message, .no-results, .search-prompt {
+.loading-message,
+.no-results,
+.search-prompt {
   text-align: center;
   padding: 3rem 2rem;
 }
@@ -256,22 +258,22 @@
   .search-header {
     padding: 1rem;
   }
-  
+
   .back-link {
     position: static;
     display: block;
     transform: none;
     margin-bottom: 1rem;
   }
-  
+
   .search-header h1 {
     font-size: 2rem;
   }
-  
+
   .search-results {
     padding: 1rem;
   }
-  
+
   .artwork-grid {
     grid-template-columns: 1fr;
   }
