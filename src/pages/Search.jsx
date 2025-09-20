@@ -8,11 +8,17 @@ import "./Search.css";
 function Search() {
   const [searchParams] = useSearchParams();
   const [searchResults, setSearchResults] = useState([]);
+  const [filteredResults, setFilteredResults] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
   const [error, setError] = useState(null);
   const [collectionItems, setCollectionItems] = useState(new Set());
   const [currentSearchTerm, setCurrentSearchTerm] = useState('');
+  
+  // Filter and sort states
+  const [sortBy, setSortBy] = useState('relevance');
+  const [filterMuseum, setFilterMuseum] = useState('all');
+  const [filterHasImage, setFilterHasImage] = useState('all');
 
   // Load collection on mount
   useEffect(() => {
@@ -40,6 +46,64 @@ function Search() {
       handleSearch(autoSearchTerm);
     }
   }, [searchParams]);
+
+  // Apply filters and sorting whenever results or filter options change
+  useEffect(() => {
+    let filtered = [...searchResults];
+
+    // Apply museum filter
+    if (filterMuseum !== 'all') {
+      filtered = filtered.filter(artwork => artwork.museum === filterMuseum);
+    }
+
+    // Apply image filter
+    if (filterHasImage === 'with-image') {
+      filtered = filtered.filter(artwork => artwork.thumbnailUrl || artwork.imageUrl);
+    } else if (filterHasImage === 'without-image') {
+      filtered = filtered.filter(artwork => !artwork.thumbnailUrl && !artwork.imageUrl);
+    }
+
+    // Apply sorting
+    switch (sortBy) {
+      case 'title-asc':
+        filtered.sort((a, b) => (a.title || '').localeCompare(b.title || ''));
+        break;
+      case 'title-desc':
+        filtered.sort((a, b) => (b.title || '').localeCompare(a.title || ''));
+        break;
+      case 'artist-asc':
+        filtered.sort((a, b) => (a.artist || '').localeCompare(b.artist || ''));
+        break;
+      case 'artist-desc':
+        filtered.sort((a, b) => (b.artist || '').localeCompare(a.artist || ''));
+        break;
+      case 'date-newest':
+        filtered.sort((a, b) => {
+          const yearA = parseInt((a.date || '').match(/\d{4}/)?.[0] || '0');
+          const yearB = parseInt((b.date || '').match(/\d{4}/)?.[0] || '0');
+          return yearB - yearA;
+        });
+        break;
+      case 'date-oldest':
+        filtered.sort((a, b) => {
+          const yearA = parseInt((a.date || '').match(/\d{4}/)?.[0] || '0');
+          const yearB = parseInt((b.date || '').match(/\d{4}/)?.[0] || '0');
+          return yearA - yearB;
+        });
+        break;
+      case 'museum':
+        filtered.sort((a, b) => (a.museum || '').localeCompare(b.museum || ''));
+        break;
+      default: // 'relevance'
+        // Keep original order (relevance from API)
+        break;
+    }
+
+    setFilteredResults(filtered);
+  }, [searchResults, sortBy, filterMuseum, filterHasImage]);
+
+  // Get unique museums from current results for filter dropdown
+  const availableMuseums = [...new Set(searchResults.map(artwork => artwork.museum).filter(Boolean))];
 
   const handleSearch = async (searchTerm) => {
     setIsLoading(true);
@@ -132,9 +196,62 @@ function Search() {
 
         {!isLoading && !error && searchResults.length > 0 && (
           <div className="results-grid">
-            <h2>Search Results ({searchResults.length})</h2>
+            <div className="results-header">
+              <h2>Search Results ({filteredResults.length} of {searchResults.length})</h2>
+              
+              <div className="filters-container">
+                <div className="filter-group">
+                  <label htmlFor="sort-select">Sort by:</label>
+                  <select 
+                    id="sort-select"
+                    value={sortBy} 
+                    onChange={(e) => setSortBy(e.target.value)}
+                    className="filter-select"
+                  >
+                    <option value="relevance">Relevance</option>
+                    <option value="title-asc">Title (A-Z)</option>
+                    <option value="title-desc">Title (Z-A)</option>
+                    <option value="artist-asc">Artist (A-Z)</option>
+                    <option value="artist-desc">Artist (Z-A)</option>
+                    <option value="date-newest">Date (Newest)</option>
+                    <option value="date-oldest">Date (Oldest)</option>
+                    <option value="museum">Museum</option>
+                  </select>
+                </div>
+
+                <div className="filter-group">
+                  <label htmlFor="museum-filter">Museum:</label>
+                  <select 
+                    id="museum-filter"
+                    value={filterMuseum} 
+                    onChange={(e) => setFilterMuseum(e.target.value)}
+                    className="filter-select"
+                  >
+                    <option value="all">All Museums</option>
+                    {availableMuseums.map(museum => (
+                      <option key={museum} value={museum}>{museum}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="filter-group">
+                  <label htmlFor="image-filter">Images:</label>
+                  <select 
+                    id="image-filter"
+                    value={filterHasImage} 
+                    onChange={(e) => setFilterHasImage(e.target.value)}
+                    className="filter-select"
+                  >
+                    <option value="all">All Artworks</option>
+                    <option value="with-image">With Images</option>
+                    <option value="without-image">Without Images</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            
             <div className="artwork-grid">
-              {searchResults.map((artwork) => (
+              {filteredResults.map((artwork) => (
                 <div key={artwork.id} className="artwork-card">
                   <div className="artwork-image">
                     {artwork.thumbnailUrl ? (
