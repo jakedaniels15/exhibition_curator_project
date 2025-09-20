@@ -541,6 +541,7 @@
   align-items: center;
   justify-content: center;
   text-align: center;
+  margin-left: 2rem;
 }
 
 .add-to-collection-card:hover {
@@ -669,6 +670,7 @@
       0 0 0 6px rgba(212, 175, 55, 0.5),
       0 0 0 9px rgba(139, 69, 19, 0.3),
       0 10px 25px rgba(0, 0, 0, 0.15);
+    margin-left: 1.5rem;
   }
 
   .add-icon-container {
@@ -798,6 +800,7 @@
       0 0 0 4px rgba(212, 175, 55, 0.5),
       0 0 0 7px rgba(139, 69, 19, 0.3),
       0 8px 20px rgba(0, 0, 0, 0.15);
+    margin-left: 1rem;
   }
 
   .add-icon-container {
