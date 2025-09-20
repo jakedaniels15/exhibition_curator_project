@@ -301,7 +301,7 @@
 
 .artwork-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr) !important;
+  grid-template-columns: repeat(3, 1fr) !important;
   gap: 2rem;
   animation: fadeInUp 1s ease-out;
 }
@@ -346,7 +346,7 @@
 .artwork-image {
   position: relative;
   width: 100%;
-  height: 150px;
+  height: 200px;
   overflow: hidden;
   background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
   border-radius: 15px 15px 0 0;
@@ -354,7 +354,7 @@
 
 .artwork-image img {
   width: 100%;
-  height: 100%;
+  height: 200px;
   object-fit: contain;
   transition: all 0.4s ease;
   filter: brightness(1.05) contrast(1.02);
