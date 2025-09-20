@@ -378,12 +378,12 @@
 
 .artwork-info {
   padding: 1rem;
-  flex: 0 0 auto;
   display: flex;
   flex-direction: column;
   position: relative;
   z-index: 2;
-  max-height: 150px;
+  height: 300px;
+  overflow: hidden;
 }
 
 .artwork-info h3 {
