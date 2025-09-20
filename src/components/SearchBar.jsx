@@ -22,20 +22,31 @@ function SearchBar({ onSearch, isLoading, initialValue = "" }) {
 
   return (
     <div className="search-bar">
-      <form onSubmit={handleSubmit} className="search-form">
+      <form onSubmit={handleSubmit} className="search-form" role="search">
         <div className="search-input-container">
+          <label htmlFor="artwork-search" className="sr-only">
+            Search artworks by title, artist, or keyword
+          </label>
           <input
+            id="artwork-search"
             type="text"
             value={searchTerm}
             onChange={handleInputChange}
             placeholder="Search artworks by title, artist, or keyword..."
             className="search-input"
             disabled={isLoading}
+            aria-label="Search artworks by title, artist, or keyword"
+            aria-describedby="search-help"
+            autoComplete="off"
           />
+          <div id="search-help" className="sr-only">
+            Enter keywords to search through museum artwork collections
+          </div>
           <button
             type="submit"
             className="search-button"
             disabled={isLoading || !searchTerm.trim()}
+            aria-label={isLoading ? "Searching..." : "Search artworks"}
           >
             {isLoading ? (
               <span className="loading-spinner"></span>
@@ -55,36 +66,45 @@ function SearchBar({ onSearch, isLoading, initialValue = "" }) {
         </div>
       </form>
 
-      <div className="search-presets">
-        <span className="presets-label">Quick search:</span>
-        <button
-          onClick={() => onSearch("Van Gogh")}
-          className="preset-button"
-          disabled={isLoading}
-        >
-          Van Gogh
-        </button>
-        <button
-          onClick={() => onSearch("Monet")}
-          className="preset-button"
-          disabled={isLoading}
-        >
-          Monet
-        </button>
-        <button
-          onClick={() => onSearch("Picasso")}
-          className="preset-button"
-          disabled={isLoading}
-        >
-          Picasso
-        </button>
-        <button
-          onClick={() => onSearch("Renaissance")}
-          className="preset-button"
-          disabled={isLoading}
-        >
-          Renaissance
-        </button>
+            <div className="preset-searches">
+        <span className="presets-label" id="presets-label">Quick search:</span>
+        <div role="group" aria-labelledby="presets-label">
+          <button
+            onClick={() => onSearch("Van Gogh")}
+            className="preset-button"
+            disabled={isLoading}
+            aria-label="Search for Van Gogh artworks"
+          >
+            Van Gogh
+          </button>
+          <button
+            onClick={() => onSearch("Monet")}
+            className="preset-button"
+            disabled={isLoading}
+            aria-label="Search for Monet artworks"
+          >
+            Monet
+          </button>
+          <button
+            onClick={() => onSearch("Picasso")}
+            className="preset-button"
+            disabled={isLoading}
+            aria-label="Search for Picasso artworks"
+          >
+            Picasso
+          </button>
+          <button
+            onClick={() => onSearch("Renaissance")}
+            className="preset-button"
+            disabled={isLoading}
+            aria-label="Search for Renaissance artworks"
+          >
+            Renaissance
+          </button>
+        </div>
+      </div>
+      <div aria-live="polite" aria-atomic="true" className="sr-only" id="search-status">
+        {isLoading && "Searching for artworks..."}
       </div>
     </div>
   );

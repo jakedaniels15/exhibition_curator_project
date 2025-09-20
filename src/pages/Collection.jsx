@@ -13,6 +13,10 @@ function Collection() {
     dateRange: ''
   });
 
+  // Keyboard navigation states
+  const [focusedCardIndex, setFocusedCardIndex] = useState(-1);
+  const [isKeyboardNavigation, setIsKeyboardNavigation] = useState(false);
+
   useEffect(() => {
     const loadCollection = () => {
       setIsLoading(true);
@@ -132,6 +136,70 @@ function Collection() {
       dateRange: ''
     });
   };
+
+  // Keyboard navigation for collection cards
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (!isKeyboardNavigation || filteredCollection.length === 0) return;
+
+      const gridColumns = 5; // Collection uses 5 columns
+      const totalCards = filteredCollection.length;
+
+      switch (e.key) {
+        case 'ArrowRight':
+          e.preventDefault();
+          setFocusedCardIndex(prev => {
+            const next = prev + 1;
+            return next < totalCards ? next : prev;
+          });
+          break;
+        case 'ArrowLeft':
+          e.preventDefault();
+          setFocusedCardIndex(prev => {
+            const next = prev - 1;
+            return next >= 0 ? next : prev;
+          });
+          break;
+        case 'ArrowDown':
+          e.preventDefault();
+          setFocusedCardIndex(prev => {
+            const next = prev + gridColumns;
+            return next < totalCards ? next : prev;
+          });
+          break;
+        case 'ArrowUp':
+          e.preventDefault();
+          setFocusedCardIndex(prev => {
+            const next = prev - gridColumns;
+            return next >= 0 ? next : prev;
+          });
+          break;
+        case 'Enter':
+        case ' ':
+          e.preventDefault();
+          if (focusedCardIndex >= 0 && focusedCardIndex < totalCards) {
+            const card = filteredCollection[focusedCardIndex];
+            window.location.href = `/artwork/${card.id}?from=collection`;
+          }
+          break;
+        case 'Escape':
+          setIsKeyboardNavigation(false);
+          setFocusedCardIndex(-1);
+          break;
+      }
+    };
+
+    if (isKeyboardNavigation) {
+      document.addEventListener('keydown', handleKeyDown);
+      return () => document.removeEventListener('keydown', handleKeyDown);
+    }
+  }, [isKeyboardNavigation, focusedCardIndex, filteredCollection]);
+
+  // Reset focus when collection changes
+  useEffect(() => {
+    setFocusedCardIndex(-1);
+    setIsKeyboardNavigation(false);
+  }, [filteredCollection]);
 
   const handleRemoveFromCollection = (artworkId) => {
     const result = collectionService.removeFromCollection(artworkId);

@@ -1,3 +1,76 @@
+/* Global accessibility styles */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Skip navigation links */
+.skip-nav {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+}
+
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 6px;
+  background: #000;
+  color: #fff;
+  padding: 8px;
+  text-decoration: none;
+  border-radius: 0 0 4px 4px;
+  font-weight: bold;
+  z-index: 1001;
+  transition: top 0.2s ease;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* Focus indicators for keyboard navigation */
+.artwork-card:focus,
+.artwork-card.keyboard-focused {
+  outline: 3px solid #007bff;
+  outline-offset: 2px;
+  z-index: 10;
+  box-shadow: 0 0 0 5px rgba(0, 123, 255, 0.3);
+}
+
+/* Focus indicators for buttons and links */
+.view-details-btn:focus,
+.add-to-collection-btn:focus,
+.filter-select:focus,
+.preset-button:focus,
+.back-link:focus,
+.collection-link:focus {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
+  box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.2);
+}
+
+/* High contrast for better accessibility */
+@media (prefers-contrast: high) {
+  .artwork-card {
+    border: 2px solid #000;
+  }
+  
+  .view-details-btn,
+  .add-to-collection-btn {
+    border: 2px solid #000;
+    font-weight: bold;
+  }
+}
+
 .search-page {
   min-height: 100vh;
   background: linear-gradient(135deg, #3a5f3a 0%, #5a8a5a 100%);

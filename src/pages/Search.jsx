@@ -27,6 +27,10 @@ function Search() {
   const [searchTermIndex, setSearchTermIndex] = useState(0);
   const [isMuseumMode, setIsMuseumMode] = useState(false);
 
+  // Keyboard navigation states
+  const [focusedCardIndex, setFocusedCardIndex] = useState(-1);
+  const [isKeyboardNavigation, setIsKeyboardNavigation] = useState(false);
+
   // Load collection on mount
   useEffect(() => {
     const loadCollection = () => {
@@ -185,6 +189,70 @@ function Search() {
 
     setFilteredResults(filtered);
   }, [searchResults, sortBy, filterMuseum, filterHasImage, filterArtType]);
+
+  // Keyboard navigation for artwork cards
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (!isKeyboardNavigation || filteredResults.length === 0) return;
+
+      const gridColumns = 4;
+      const totalCards = filteredResults.length;
+
+      switch (e.key) {
+        case 'ArrowRight':
+          e.preventDefault();
+          setFocusedCardIndex(prev => {
+            const next = prev + 1;
+            return next < totalCards ? next : prev;
+          });
+          break;
+        case 'ArrowLeft':
+          e.preventDefault();
+          setFocusedCardIndex(prev => {
+            const next = prev - 1;
+            return next >= 0 ? next : prev;
+          });
+          break;
+        case 'ArrowDown':
+          e.preventDefault();
+          setFocusedCardIndex(prev => {
+            const next = prev + gridColumns;
+            return next < totalCards ? next : prev;
+          });
+          break;
+        case 'ArrowUp':
+          e.preventDefault();
+          setFocusedCardIndex(prev => {
+            const next = prev - gridColumns;
+            return next >= 0 ? next : prev;
+          });
+          break;
+        case 'Enter':
+        case ' ':
+          e.preventDefault();
+          if (focusedCardIndex >= 0 && focusedCardIndex < totalCards) {
+            const card = filteredResults[focusedCardIndex];
+            window.location.href = `/artwork/${card.id}?from=search&q=${encodeURIComponent(currentSearchTerm)}`;
+          }
+          break;
+        case 'Escape':
+          setIsKeyboardNavigation(false);
+          setFocusedCardIndex(-1);
+          break;
+      }
+    };
+
+    if (isKeyboardNavigation) {
+      document.addEventListener('keydown', handleKeyDown);
+      return () => document.removeEventListener('keydown', handleKeyDown);
+    }
+  }, [isKeyboardNavigation, focusedCardIndex, filteredResults, currentSearchTerm]);
+
+  // Reset focus when search results change
+  useEffect(() => {
+    setFocusedCardIndex(-1);
+    setIsKeyboardNavigation(false);
+  }, [filteredResults]);
 
   // Get unique museums from current results for filter dropdown
   const availableMuseums = [...new Set(searchResults.map(artwork => artwork.museum).filter(Boolean))];
@@ -392,6 +460,12 @@ function Search() {
 
   return (
     <div className="search-page">
+      {/* Skip navigation links for accessibility */}
+      <nav className="skip-nav" aria-label="Skip navigation">
+        <a href="#main-content" className="skip-link">Skip to main content</a>
+        <a href="#search-results" className="skip-link">Skip to search results</a>
+      </nav>
+      
       <header className="search-header">
         <div className="nav-links">
           <Link to="/" className="back-link">
@@ -411,13 +485,22 @@ function Search() {
         </div>
       </header>
 
-      <SearchBar 
-        onSearch={handleSearch} 
-        isLoading={isLoading} 
-        initialValue={currentSearchTerm}
-      />
+      <main id="main-content" role="main">
+        <SearchBar 
+          onSearch={handleSearch} 
+          isLoading={isLoading} 
+          initialValue={currentSearchTerm}
+        />
 
-      <div className="search-results">
+        <div className="search-results" id="search-results" role="region" aria-label="Search results">
+          {/* Live region for screen reader announcements */}
+          <div aria-live="polite" aria-atomic="false" className="sr-only" id="results-status">
+            {hasSearched && !isLoading && (
+              `Found ${filteredResults.length} artwork${filteredResults.length !== 1 ? 's' : ''} ${currentSearchTerm ? `for "${currentSearchTerm}"` : ''}`
+            )}
+            {isLoading && "Searching for artworks..."}
+            {error && `Error: ${error}`}
+          </div>
         {isLoading && (
           <div className="loading-message">
             <div className="spinner"></div>
@@ -445,14 +528,15 @@ function Search() {
             <div className="results-header">
               <h2>Search Results ({filteredResults.length} of {searchResults.length})</h2>
               
-              <div className="filters-container">
-                <div className="filter-group">
-                  <label htmlFor="sort-select">Sort by:</label>
+              <div className="filters-container" role="region" aria-label="Filter and sort options">
+                <div className="filter-group" role="group" aria-labelledby="sort-label">
+                  <label id="sort-label" htmlFor="sort-select">Sort by:</label>
                   <select 
                     id="sort-select"
                     value={sortBy} 
                     onChange={(e) => setSortBy(e.target.value)}
                     className="filter-select"
+                    aria-describedby="sort-help"
                   >
                     <option value="relevance">Relevance</option>
                     <option value="title-asc">Title (A-Z)</option>
@@ -511,14 +595,35 @@ function Search() {
               </div>
             </div>
             
-            <div className="artwork-grid">
-              {filteredResults.map((artwork) => (
-                <div key={artwork.id} className="artwork-card">
+            <div 
+              className="artwork-grid"
+              role="grid"
+              aria-label="Search results for artworks"
+              tabIndex={0}
+              onFocus={() => {
+                setIsKeyboardNavigation(true);
+                if (focusedCardIndex === -1 && filteredResults.length > 0) {
+                  setFocusedCardIndex(0);
+                }
+              }}
+            >
+              {filteredResults.map((artwork, index) => (
+                <div 
+                  key={artwork.id} 
+                  className={`artwork-card ${focusedCardIndex === index ? 'keyboard-focused' : ''}`}
+                  role="gridcell"
+                  tabIndex={focusedCardIndex === index ? 0 : -1}
+                  aria-describedby={`artwork-${artwork.id}-description`}
+                  onFocus={() => {
+                    setIsKeyboardNavigation(true);
+                    setFocusedCardIndex(index);
+                  }}
+                >
                   <div className="artwork-image">
                     {artwork.thumbnailUrl ? (
                       <img
                         src={artwork.thumbnailUrl}
-                        alt={artwork.title}
+                        alt={`${artwork.title} by ${artwork.artist || 'Unknown artist'}`}
                         onError={(e) => {
                           e.target.style.display = "none";
                           e.target.nextSibling.style.display = "flex";
@@ -530,6 +635,7 @@ function Search() {
                       style={{
                         display: artwork.thumbnailUrl ? "none" : "flex",
                       }}
+                      aria-label="No image available"
                     >
                       <span>No Image</span>
                     </div>
@@ -540,17 +646,30 @@ function Search() {
                     <p className="artist">{artwork.artist}</p>
                     <p className="date">{artwork.date}</p>
                     <p className="museum">{artwork.museum}</p>
+                    
+                    {/* Hidden description for screen readers */}
+                    <div id={`artwork-${artwork.id}-description`} className="sr-only">
+                      Artwork: {artwork.title} by {artwork.artist || 'Unknown artist'}, 
+                      {artwork.date && ` created ${artwork.date},`} 
+                      from {artwork.museum}. 
+                      {focusedCardIndex === index ? 'Press Enter to view details or Escape to exit navigation.' : ''}
+                    </div>
 
                     <div className="artwork-actions">
                       <Link
                         to={`/artwork/${artwork.id}?from=search&q=${encodeURIComponent(currentSearchTerm)}`}
                         className="view-details-btn"
+                        aria-label={`View details for ${artwork.title} by ${artwork.artist || 'Unknown artist'}`}
                       >
                         View Details
                       </Link>
                       <button
                         onClick={(e) => handleAddToCollection(e, artwork)}
                         className={`add-to-collection-btn ${collectionItems.has(artwork.id) ? 'in-collection' : ''}`}
+                        aria-label={collectionItems.has(artwork.id) 
+                          ? `Remove ${artwork.title} from collection` 
+                          : `Add ${artwork.title} to collection`}
+                        aria-pressed={collectionItems.has(artwork.id)}
                       >
                         {collectionItems.has(artwork.id) ? '✓ In Collection' : 'Add to Collection'}
                       </button>
@@ -596,6 +715,7 @@ function Search() {
           </div>
         )}
       </div>
+      </main>
     </div>
   );
 }
