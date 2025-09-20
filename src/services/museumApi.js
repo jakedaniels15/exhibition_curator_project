@@ -33,6 +33,39 @@ export const searchAllMuseums = async (query, limitPerMuseum = 10) => {
   }
 };
 
+// Search for a broader collection from all museums using multiple terms
+export const searchMuseumCollection = async (limitPerMuseum = 20) => {
+  try {
+    // Use multiple broad search terms to get a diverse collection
+    const searchTerms = ['painting', 'sculpture', 'drawing', 'print', 'photograph', 'ceramic', 'textile', 'modern', 'contemporary', 'ancient'];
+    
+    const searchPromises = searchTerms.map(term => 
+      searchAllMuseums(term, Math.ceil(limitPerMuseum / searchTerms.length))
+    );
+
+    const results = await Promise.allSettled(searchPromises);
+    
+    // Combine all successful results
+    const allResults = [];
+    results.forEach(result => {
+      if (result.status === "fulfilled") {
+        allResults.push(...result.value);
+      }
+    });
+
+    // Remove duplicates based on artwork ID
+    const uniqueResults = allResults.filter((artwork, index, self) => 
+      index === self.findIndex(a => a.id === artwork.id)
+    );
+
+    // Shuffle and limit results
+    return shuffleArray(uniqueResults).slice(0, limitPerMuseum * 2);
+  } catch (error) {
+    console.error("Error in museum collection search:", error);
+    throw error;
+  }
+};
+
 // Get artwork details from the appropriate museum based on ID prefix
 export const getArtworkDetails = async (artworkId) => {
   try {

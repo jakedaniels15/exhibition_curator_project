@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import SearchBar from "../components/SearchBar";
-import { searchAllMuseums } from "../services/museumApi";
+import { searchAllMuseums, searchMuseumCollection } from "../services/museumApi";
 import { collectionService } from "../services/collectionService";
 import "./Search.css";
 
@@ -50,13 +50,8 @@ function Search() {
       handleSearch(autoSearchTerm);
     } else if (museumParam) {
       console.log('Museum parameter detected:', museumParam);
-      // Search for broad terms to get museum collections
-      handleSearch('art');
-      // Set the museum filter to the specified museum
-      setTimeout(() => {
-        console.log('Setting museum filter to:', museumParam);
-        setFilterMuseum(museumParam);
-      }, 100);
+      // Use broader search to get comprehensive museum collections
+      handleMuseumSearch(museumParam);
     }
   }, [searchParams]);
 
@@ -136,6 +131,37 @@ function Search() {
       }
     } catch (error) {
       console.error("Search failed:", error);
+      setError("Search failed. Please try again later.");
+      setSearchResults([]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleMuseumSearch = async (museumName) => {
+    setIsLoading(true);
+    setHasSearched(true);
+    setError(null);
+    setCurrentSearchTerm(`${museumName} Collection`);
+
+    try {
+      console.log("Searching museum collection for:", museumName);
+
+      // Use the broader museum collection search
+      const results = await searchMuseumCollection(30);
+      setSearchResults(results);
+
+      // Set the museum filter to the specified museum
+      setTimeout(() => {
+        console.log('Setting museum filter to:', museumName);
+        setFilterMuseum(museumName);
+      }, 100);
+
+      if (results.length === 0) {
+        setError("No artworks found for this museum.");
+      }
+    } catch (error) {
+      console.error("Museum search failed:", error);
       setError("Search failed. Please try again later.");
       setSearchResults([]);
     } finally {
