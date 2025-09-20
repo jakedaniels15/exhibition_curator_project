@@ -318,6 +318,8 @@
   backdrop-filter: blur(10px);
   position: relative;
   height: 220px;
+  min-height: 220px;
+  max-height: 220px;
 }
 
 .artwork-card:hover {
@@ -379,11 +381,12 @@
 
 .artwork-info {
   padding: 1rem;
-  flex: 1;
+  flex: 0 1 auto;
   display: flex;
   flex-direction: column;
   position: relative;
   z-index: 2;
+  overflow: hidden;
 }
 
 .artwork-info h3 {
