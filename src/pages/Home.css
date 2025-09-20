@@ -100,6 +100,7 @@
   box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
   border: 1px solid rgba(255, 255, 255, 0.2);
   animation: fadeInUp 1s ease-out;
+  text-align: center;
 }
 
 .museums-section h2 {
@@ -391,21 +392,21 @@
   display: inline-block;
   background: linear-gradient(135deg, #5a8a5a 0%, #7ba67b 100%);
   color: white;
-  padding: 18px 45px;
-  border-radius: 35px;
+  padding: 14px 32px;
+  border-radius: 30px;
   text-decoration: none;
   font-weight: 700;
-  font-size: 1.15rem;
+  font-size: 1rem;
   transition: all 0.3s ease;
-  box-shadow: 0 10px 30px rgba(90, 138, 90, 0.4);
+  box-shadow: 0 8px 25px rgba(90, 138, 90, 0.4);
   text-transform: uppercase;
   letter-spacing: 0.5px;
   border: 2px solid transparent;
 }
 
 .browse-button:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 15px 40px rgba(90, 138, 90, 0.5);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 35px rgba(90, 138, 90, 0.5);
   background: linear-gradient(135deg, #4a7a4a 0%, #6b966b 100%);
   border-color: rgba(255, 255, 255, 0.3);
 }
