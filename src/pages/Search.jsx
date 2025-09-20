@@ -569,7 +569,7 @@ function Search() {
             </p>
             <p>Or try one of the quick search options to get started</p>
             <div className="museum-info">
-              <p>🎨 Searching across:</p>
+              <p>Searching across:</p>
               <ul>
                 <li>Art Institute of Chicago</li>
                 <li>Metropolitan Museum of Art</li>
