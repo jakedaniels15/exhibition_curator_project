@@ -11,7 +11,6 @@ function Search() {
   const [hasSearched, setHasSearched] = useState(false);
   const [error, setError] = useState(null);
   const [collectionItems, setCollectionItems] = useState(new Set());
-  const [collectionMessage, setCollectionMessage] = useState('');
 
   // Load collection on mount
   useEffect(() => {
@@ -71,19 +70,12 @@ function Search() {
           newSet.delete(artwork.id);
           return newSet;
         });
-        setCollectionMessage('Removed from collection');
-        setTimeout(() => setCollectionMessage(''), 3000);
       }
     } else {
       // Add to collection
       const result = collectionService.addToCollection(artwork);
       if (result.success) {
         setCollectionItems(prev => new Set(prev).add(artwork.id));
-        setCollectionMessage('Added to collection!');
-        setTimeout(() => setCollectionMessage(''), 3000);
-      } else {
-        setCollectionMessage(result.message);
-        setTimeout(() => setCollectionMessage(''), 3000);
       }
     }
   };
@@ -96,11 +88,6 @@ function Search() {
         </Link>
         <h1>Browse Artworks</h1>
         <p>Discover masterpieces from world-renowned museums</p>
-        {collectionMessage && (
-          <div className="collection-message">
-            {collectionMessage}
-          </div>
-        )}
       </header>
 
       <SearchBar onSearch={handleSearch} isLoading={isLoading} />
