@@ -520,6 +520,10 @@
 }
 
 /* Add to Collection Card */
+.add-card-wrapper {
+  margin-left: 2rem;
+}
+
 .add-to-collection-card {
   background: rgba(245, 245, 240, 0.95);
   border-radius: 10px;
@@ -541,7 +545,6 @@
   align-items: center;
   justify-content: center;
   text-align: center;
-  margin-left: 2rem;
 }
 
 .add-to-collection-card:hover {
@@ -654,6 +657,10 @@
     justify-content: center;
   }
 
+  .add-card-wrapper {
+    margin-left: 1.5rem;
+  }
+
   .collection-artwork-card {
     width: 250px;
     height: 350px;
@@ -670,7 +677,6 @@
       0 0 0 6px rgba(212, 175, 55, 0.5),
       0 0 0 9px rgba(139, 69, 19, 0.3),
       0 10px 25px rgba(0, 0, 0, 0.15);
-    margin-left: 1.5rem;
   }
 
   .add-icon-container {
@@ -784,6 +790,10 @@
     justify-content: center;
   }
 
+  .add-card-wrapper {
+    margin-left: 1rem;
+  }
+
   .collection-artwork-card {
     width: 220px;
     height: 320px;
@@ -800,7 +810,6 @@
       0 0 0 4px rgba(212, 175, 55, 0.5),
       0 0 0 7px rgba(139, 69, 19, 0.3),
       0 8px 20px rgba(0, 0, 0, 0.15);
-    margin-left: 1rem;
   }
 
   .add-icon-container {

@@ -397,15 +397,17 @@ function Collection() {
             ))}
             
             {/* Add to Collection Card */}
-            <Link to="/search" className="add-to-collection-card">
-              <div className="add-icon-container">
-                <div className="plus-icon">+</div>
-              </div>
-              <div className="add-card-content">
-                <h3 className="add-card-title">Add to Collection</h3>
-                <p className="add-card-subtitle">Discover new artworks</p>
-              </div>
-            </Link>
+            <div className="add-card-wrapper">
+              <Link to="/search" className="add-to-collection-card">
+                <div className="add-icon-container">
+                  <div className="plus-icon">+</div>
+                </div>
+                <div className="add-card-content">
+                  <h3 className="add-card-title">Add to Collection</h3>
+                  <p className="add-card-subtitle">Discover new artworks</p>
+                </div>
+              </Link>
+            </div>
           </div>
         </div>
         </>
